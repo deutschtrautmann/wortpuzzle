@@ -447,7 +447,7 @@ Das Spiel macht Spaß."></textarea>
         </svg>
     </div>
     <div id="mascot-speech-bubble">
-        <p id="mascot-text">Hallo! Ich bin dein Lern-Freund. Bringst du die Wörter in die richtige Reihenfolge?</p>
+        <p id="mascot-text">Hallo! Bitte hilf mir das Worträtsel zu lösen.</p>
     </div>
 </div>
 
@@ -458,7 +458,7 @@ Das Spiel macht Spaß."></textarea>
 
 <script>
 // ── Daten & Zustand ───────────────────────────────────────────────
-let sentences = ["eins zwei drei vier fünf sechs sieben acht neun zehn"];
+let sentences = ["eins zwei drei vier fünf sechs sieben acht neun zehn elf zwölf"];
 let current = 0;
 let lastFileData = "";
 let errorDamping = 0;
@@ -467,10 +467,10 @@ let errorDamping = 0;
 let proceduralSeed = 1; 
 let currentPattern = [1, 1.2, 1.5, 1.8]; 
 
-const greetings = ["Neue Sätze! Viel Spaß beim Lernen!", "Super, neue Texte! Starten wir!", "Bist du bereit? Los geht's!"];
-const correctComments = ["Sehr gut! Der Satz ist richtig!", "Perfekt! Du machst das toll!", "Das stimmt! Genau richtig!", "Klasse! Richtige Antwort!"];
-const partialComments = ["Gut! Ein paar Wörter passen schon!", "Nicht schlecht! Ein Teil ist richtig!", "Es wird! Einige Wörter sind am richtigen Platz!"];
-const wrongComments = ["Das stimmt leider noch nicht. Probier es noch mal!", "Leider falsch. Du schaffst das!", "Noch nicht richtig. Kein Problem!"];
+const greetings = ["Neue Sätze! Viel Glück!", "Super, weiter gehts!", "Kannst du noch?"];
+const correctComments = ["Wunderbar! Alles richtig!", "Perfekt! Du machst super!", "Das ist richtig!", "Du bist ein Genie!"];
+const partialComments = ["Nicht schlecht! Ein paar Teile sind schon richtig!", "Ein Teil ist schon richtig!", "Das kommt schon gut!"];
+const wrongComments = ["Probiere es noch mal!", "Leider falsch. Aber du schaffst das schon!", "Noch nicht richtig. Frag deinen Lehrer Trautmann"];
 
 function getRandomElement(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 
