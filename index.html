@@ -3,22 +3,69 @@
 <head>
 <meta charset="UTF-8">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Wörter Puzzle - Edition</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>Satzpuzzle</title>
 <style>
     * { box-sizing: border-box; }
 
     body {
-        font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+        font-family: -apple-system, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
         padding: 0;
+        padding-bottom: env(safe-area-inset-bottom, 0px);
         margin: 0;
         background: #f9fbfd;
         color: #333;
         overscroll-behavior-y: contain;
         -webkit-tap-highlight-color: transparent;
+        /* Verhindert unerwünschte Text-Selektion beim Drag auf Desktop */
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
     }
 
-    h2 { margin-top: 0; font-size: 22px; color: #2c3e50;}
+    /* Texteingaben dürfen weiterhin selektierbar sein */
+    textarea, input[type="text"] {
+        -webkit-user-select: text;
+        -moz-user-select: text;
+        user-select: text;
+    }
+
+    #spieltitel {
+        margin: 0 0 18px 0;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    #spieltitel .titel-icon {
+        font-size: clamp(28px, 7vw, 38px);
+        line-height: 1;
+        user-select: none;
+    }
+
+    #spieltitel h1 {
+        margin: 0;
+        font-size: clamp(22px, 6vw, 34px);
+        font-weight: 800;
+        letter-spacing: -0.5px;
+        line-height: 1.1;
+        background: linear-gradient(135deg, #2c7be5 0%, #38c172 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    #spieltitel .titel-untertitel {
+        font-size: clamp(10px, 2.5vw, 13px);
+        color: #94a3b8;
+        font-weight: 500;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        margin-top: 1px;
+    }
 
     .container {
         min-height: 70px;
@@ -41,18 +88,23 @@
 
     .word {
         background: white;
-        padding: 13px 20px;
+        padding: clamp(10px, 3vw, 14px) clamp(14px, 4vw, 22px);
         border-radius: 12px;
         box-shadow: 0 3px 7px rgba(0,0,0,0.12);
         cursor: grab;
         user-select: none;
         -webkit-user-select: none;
+        -moz-user-select: none;
         border: 1px solid #ddd;
-        font-size: 13px;
+        font-size: clamp(14px, 3.5vw, 17px);
         display: inline-block;
         touch-action: none;
         transition: box-shadow 0.15s, transform 0.22s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         will-change: transform;
+        /* Mindest-Touch-Ziel 44px */
+        min-height: 44px;
+        display: inline-flex;
+        align-items: center;
     }
     .word:active { cursor: grabbing; }
 
@@ -88,8 +140,12 @@
         background: #fff;
         border: none;
         border-radius: 0;
-        padding: 20px;
+        padding: 16px;
+        padding-left: max(16px, env(safe-area-inset-left, 16px));
+        padding-right: max(16px, env(safe-area-inset-right, 16px));
+        padding-top: max(16px, env(safe-area-inset-top, 16px));
         min-height: 100vh;
+        min-height: 100dvh; /* dynamic viewport height für mobile Browser */
         box-shadow: none;
     }
 
@@ -97,8 +153,8 @@
         margin-top: 15px;
         width: 100%;
         max-width: 340px;
-        padding: 18px;
-        font-size: 20px;
+        padding: clamp(14px, 4vw, 18px);
+        font-size: clamp(16px, 4.5vw, 20px);
         border: none;
         border-radius: 15px;
         background: #4CAF50;
@@ -107,8 +163,17 @@
         display: block;
         -webkit-tap-highlight-color: transparent;
         touch-action: manipulation;
+        /* Verhindert Double-Tap-Zoom auf iOS */
+        touch-action: manipulation;
+        /* Mindest-Touch-Ziel */
+        min-height: 48px;
+        font-family: -apple-system, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
     }
     button:active { filter: brightness(0.9); }
+    /* Hover nur auf echten Zeige-Geräten (nicht Touchscreen) */
+    @media (hover: hover) {
+        button:hover { filter: brightness(1.05); }
+    }
     .restart-btn { background: #3498db; }
 
     #fileLabel {
@@ -125,71 +190,92 @@
     #fileInput { display: none; }
 
     .progress {
-        font-size: 13px;
+        font-size: clamp(12px, 3vw, 14px);
         color: #888;
         margin-bottom: 4px;
     }
 
     .top-controls {
         display: flex;
-        gap: 14px;
+        gap: 10px;
         flex-wrap: wrap;
         margin-bottom: 12px;
     }
 
     .top-button,
     #fileLabel {
-        width: 122px;
+        /* Flexibel statt fix 122px – passt sich kleinen Screens an */
+        flex: 1 1 100px;
+        max-width: 150px;
         height: 44px;
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 10px;
+        gap: 6px;
         background: #e8f0fe;
         border: 2px solid #4a90d9;
         border-radius: 14px;
         padding: 0 10px;
-        font-size: 13px;
+        font-size: clamp(12px, 3vw, 14px);
         cursor: pointer;
         color: #333;
         box-sizing: border-box;
         margin: 0;
         line-height: 1;
-        font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+        font-family: -apple-system, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
         text-align: center;
+        touch-action: manipulation;
+        -webkit-tap-highlight-color: transparent;
+        white-space: nowrap;
     }
 
-    .top-button:hover,
-    #fileLabel:hover { background: #dce8fd; }
+    @media (hover: hover) {
+        .top-button:hover,
+        #fileLabel:hover { background: #dce8fd; }
+    }
 
     #textModal {
         position: fixed;
-        inset: 0;
+        top: 0; right: 0; bottom: 0; left: 0; /* Fallback für ältere Browser */
+        inset: 0; /* Modern */
         background: rgba(0,0,0,0.45);
         display: none;
         align-items: center;
         justify-content: center;
         z-index: 9999;
-        padding: 20px;
+        padding: 16px;
+        padding-bottom: max(16px, env(safe-area-inset-bottom, 16px));
+        /* Scroll bei überlangem Modal-Inhalt (kleines Handy + Tastatur offen) */
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
     }
 
     #textModalContent {
         background: white;
-        width: min(720px, 100%);
+        width: 100%;
+        max-width: 720px;
         border-radius: 18px;
-        padding: 22px;
+        padding: 20px;
         box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+        /* Modal soll nicht über den Bildschirm hinausgehen */
+        max-height: 90vh;
+        max-height: 90dvh;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
     }
 
     #textInputArea {
         width: 100%;
-        min-height: 240px;
+        min-height: 200px;
         border: 2px solid #b7c7dd;
         border-radius: 12px;
         padding: 14px;
-        font-size: 17px;
+        /* Mindestens 16px – verhindert Auto-Zoom auf iOS Safari */
+        font-size: 16px;
         resize: vertical;
         font-family: inherit;
+        /* Eigenes Scrollverhalten auf iOS */
+        -webkit-overflow-scrolling: touch;
     }
 
     .modal-buttons {
@@ -206,10 +292,10 @@
     #mascot-container {
         display: flex;
         align-items: center;
-        gap: 15px;
-        margin-top: 15px;
+        gap: 12px;
+        margin-top: 12px;
         margin-bottom: 5px;
-        padding: 15px;
+        padding: 12px;
         background: #f4f9f4;
         border-radius: 18px;
         border: 2px solid #c2e0c2;
@@ -217,8 +303,8 @@
     }
 
     #mascot-image {
-        width: 90px;
-        height: 100px;
+        width: clamp(60px, 15vw, 90px);
+        height: clamp(67px, 16vw, 100px);
         flex-shrink: 0;
         transform-origin: bottom center;
         animation: floatMascot 4s ease-in-out infinite;
@@ -289,7 +375,7 @@
 
     #mascot-text {
         margin: 0;
-        font-size: 15px;
+        font-size: clamp(13px, 3.5vw, 16px);
         line-height: 1.4;
         font-weight: 500;
         color: #2c3e50;
@@ -357,32 +443,67 @@
         20%, 60% { transform: translateX(-6px); }
         40%, 80% { transform: translateX(6px); }
     }
+
+    /* ── Responsive Breakpoints ──────────────────────────────── */
+
+    /* Kleine Handys (bis 380px) */
+    @media (max-width: 380px) {
+        .top-controls { gap: 6px; }
+        .top-button, #fileLabel { font-size: 11px; padding: 0 7px; }
+        #app-box { padding: 12px; }
+    }
+
+    /* Querformat auf Handy – Mascot kleiner damit Spielfläche passt */
+    @media (max-height: 500px) and (orientation: landscape) {
+        #mascot-container { padding: 8px; gap: 8px; }
+        #mascot-image { width: 50px; height: 56px; }
+        #mascot-text { font-size: 12px; }
+    }
+
+    /* Tablet & Desktop – zentriertes Layout mit max-width */
+    @media (min-width: 700px) {
+        #app-box {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 28px 32px;
+            min-height: unset;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            border-radius: 20px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+        }
+        body { background: #eef2f7; }
+    }
 </style>
 </head>
 <body>
 <div id="app-box">
 
-<h2>Wörter-Puzzle</h2>
+<div id="spieltitel">
+    <span class="titel-icon">🧩</span>
+    <div>
+        <h1>Satzpuzzle</h1>
+        <div class="titel-untertitel">Wörter in die richtige Reihenfolge bringen</div>
+    </div>
+</div>
 
 <div class="top-controls">
-    <label id="fileLabel" class="top-button" for="fileInput">Textdatei</label>
-    <div id="textInputBtn" class="top-button">Texteingabe</div>
-    <div id="musicToggleBtn" class="top-button">Musik an</div>
+    <label id="fileLabel" class="top-button" for="fileInput"></label>
+    <div id="textInputBtn" class="top-button"></div>
+    <div id="musicToggleBtn" class="top-button"></div>
 </div>
 
 <input type="file" id="fileInput" accept=".txt">
 
 <div id="textModal">
     <div id="textModalContent">
-        <h3>Text oder Sätze eingeben</h3>
-        <p>Bitte pro Zeile einen vollständigen Satz eingeben.</p>
-        <textarea id="textInputArea" placeholder="Heute scheint die Sonne.
-Ich lerne Deutsch.
-Das Spiel macht Spaß."></textarea>
+        <h3 id="modalTitel"></h3>
+        <p id="modalHinweis"></p>
+        <textarea id="textInputArea"></textarea>
 
         <div class="modal-buttons">
-            <button id="applyTextBtn">Text übernehmen</button>
-            <button id="closeTextBtn" class="secondary-btn">Schließen</button>
+            <button id="applyTextBtn"></button>
+            <button id="closeTextBtn" class="secondary-btn"></button>
         </div>
     </div>
 </div>
@@ -447,18 +568,103 @@ Das Spiel macht Spaß."></textarea>
         </svg>
     </div>
     <div id="mascot-speech-bubble">
-        <p id="mascot-text">Hallo! Bitte hilf mir das Worträtsel zu lösen.</p>
+        <p id="mascot-text"></p>
     </div>
 </div>
 
 <div id="game"></div>
-<button id="checkBtn" onclick="checkSentence()">Prüfen</button>
+<button id="checkBtn" onclick="checkSentence()"></button>
 
 </div>
 
 <script>
+// ════════════════════════════════════════════════════════════════
+// TEXTE – Alle angezeigten Texte des Spiels zentral anpassen
+// ════════════════════════════════════════════════════════════════
+const TEXTE = {
+
+    // Beispiel-Sätze beim ersten Start (eine Zeile = ein Satz)
+    beispiel: "eins zwei drei vier fünf sechs sieben acht neun zehn elf zwölf",
+
+    // Obere Schaltflächen
+    btnDatei:      "Textdatei",
+    btnEingabe:    "Texteingabe",
+    btnMusikAn:    "Musik an",
+    btnMusikAus:   "Musik aus",
+
+    // Text-Eingabe-Modal
+    modalTitel:       "Text oder Sätze eingeben",
+    modalHinweis:     "Jede Textzeile beginnt ein neues Wortpuzzle.",
+    modalPlatzhalter: "Mein Name ist Matthias.\nIch unterrichte Deutsch.\nViel Spaß!",
+    modalUebernehmen: "Text übernehmen",
+    modalSchliessen:  "Schließen",
+    modalLeerFehler:  "Bitte einen Satz eingeben.",
+
+    // Maskottchen – Begrüßung beim Start
+    maskottStart: "Hallo! Leider habe ich die Wörter durcheinander gebracht. Bitte hilf mir das Worträtsel zu lösen.",
+
+    // Maskottchen – nach Datei/Text-Eingabe
+    begruessung: [
+        "Viel Glück!",
+        "Willkommen!",
+        "Viel Erfolg"
+    ],
+
+    // Maskottchen – Antwort richtig gelöst
+    richtig: [
+        "Wunderbar!",
+        "Perfekt!",
+        "Super!",
+        "Fantastisch!"
+    ],
+
+    // Maskottchen – Teillösung erkannt
+    teilRichtig: [
+        "Nicht schlecht!",
+        "Ein Teil ist schon richtig!",
+        "Das kommt gut!"
+    ],
+
+    // Maskottchen – falsch
+    falsch: [
+        "Nur nicht aufgeben!",
+        "Leider falsch!",
+        "Es ist noch kein Meister vom Himmel gefallen"
+    ],
+
+    // Spielfeld – Aufgabentext über den Wörtern
+    aufgabe: "Bringe die Wörter in die richtige Reihenfolge:",
+
+    // Spielfeld – Fortschrittsanzeige  (  {nr} = aktuelle Nummer,  {gesamt} = Gesamtzahl  )
+    fortschritt: "Text {nr} von {gesamt}",
+
+    // Maskottchen – Übergang zum nächsten Satz  (  {nr} = aktuelle Nummer  )
+    naechsterSatz: "Weiter geht es mit Text-Nummer {nr}:",
+
+    // Prüfen-Button
+    btnPruefen: "Prüfen",
+
+    // Ende-Bildschirm
+    endeHinweis:  "Perfekt!",
+    endeMaskott:  "Du bist jetzt ein Satzbau-Meister!",
+    endeBtnNochmal: "Nochmal spielen"
+};
+// ════════════════════════════════════════════════════════════════
+
+// ── HTML-Texte befüllen ───────────────────────────────────────────
+document.getElementById('fileLabel').textContent        = TEXTE.btnDatei;
+document.getElementById('textInputBtn').textContent     = TEXTE.btnEingabe;
+document.getElementById('musicToggleBtn').textContent   = TEXTE.btnMusikAn;
+document.getElementById('checkBtn').textContent         = TEXTE.btnPruefen;
+document.getElementById('mascot-text').textContent      = TEXTE.maskottStart;
+document.getElementById('modalTitel').textContent       = TEXTE.modalTitel;
+document.getElementById('modalHinweis').textContent     = TEXTE.modalHinweis;
+document.getElementById('textInputArea').placeholder    = TEXTE.modalPlatzhalter;
+document.getElementById('applyTextBtn').textContent     = TEXTE.modalUebernehmen;
+document.getElementById('closeTextBtn').textContent     = TEXTE.modalSchliessen;
+
 // ── Daten & Zustand ───────────────────────────────────────────────
-let sentences = ["eins zwei drei vier fünf sechs sieben acht neun zehn elf zwölf"];
+let sentences = [TEXTE.beispiel];
 let current = 0;
 let lastFileData = "";
 let errorDamping = 0;
@@ -467,10 +673,6 @@ let errorDamping = 0;
 let proceduralSeed = 1; 
 let currentPattern = [1, 1.2, 1.5, 1.8]; 
 
-const greetings = ["Neue Sätze! Viel Glück!", "Super, weiter gehts!", "Kannst du noch?"];
-const correctComments = ["Wunderbar! Alles richtig!", "Perfekt! Du machst super!", "Das ist richtig!", "Du bist ein Genie!"];
-const partialComments = ["Nicht schlecht! Ein paar Teile sind schon richtig!", "Ein Teil ist schon richtig!", "Das kommt schon gut!"];
-const wrongComments = ["Probiere es noch mal!", "Leider falsch. Aber du schaffst das schon!", "Noch nicht richtig. Frag deinen Lehrer Trautmann"];
 
 function getRandomElement(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 
@@ -502,13 +704,24 @@ let musicEnabled = true;
 let beatIndex = 0;
 
 function initAudio() {
-    if (!audioCtx) { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
-    if (audioCtx.state === 'suspended') { audioCtx.resume(); }
-    if (!ambientStarted) { ambientStarted = true; startAmbientMusic(); }
+    try {
+        if (!audioCtx) {
+            const AudioCtx = window.AudioContext || window.webkitAudioContext;
+            if (!AudioCtx) return; // Browser unterstützt Web Audio nicht
+            audioCtx = new AudioCtx();
+        }
+        // iOS/Android: AudioContext muss nach User-Interaktion resumed werden
+        if (audioCtx.state === 'suspended') { audioCtx.resume(); }
+        if (!ambientStarted) { ambientStarted = true; startAmbientMusic(); }
+    } catch(e) {
+        // Audio nicht verfügbar – Spiel läuft trotzdem
+        audioCtx = null;
+    }
 }
 
 function tone(freq, type='sine', start=0, dur=0.18, vol=0.15, endFreq=null, filterFreq=2200) {
-    if (!audioCtx) return;
+    if (!audioCtx || audioCtx.state === 'suspended') return;
+    try {
     const osc = audioCtx.createOscillator();
     const gain = audioCtx.createGain();
     const filter = audioCtx.createBiquadFilter();
@@ -531,6 +744,7 @@ function tone(freq, type='sine', start=0, dur=0.18, vol=0.15, endFreq=null, filt
 
     osc.start(now);
     osc.stop(now + dur);
+    } catch(e) { /* Audio-Fehler ignorieren */ }
 }
 
 function getPuzzleProgress() {
@@ -632,10 +846,10 @@ const musicToggleBtn = document.getElementById('musicToggleBtn');
 musicToggleBtn.addEventListener('click', () => {
     musicEnabled = !musicEnabled;
     if (musicEnabled) {
-        musicToggleBtn.textContent = 'Musik an';
+        musicToggleBtn.textContent = TEXTE.btnMusikAn;
         if (ambientStarted && !ambientInterval) startAmbientMusic();
     } else {
-        musicToggleBtn.textContent = 'Musik aus';
+        musicToggleBtn.textContent = TEXTE.btnMusikAus;
         if (ambientInterval) { clearTimeout(ambientInterval); ambientInterval = null; }
     }
     playClick();
@@ -645,9 +859,52 @@ musicToggleBtn.addEventListener('click', () => {
 document.getElementById('fileInput').addEventListener('change', function(e) {
     const file = e.target.files[0];
     if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (ev) => { lastFileData = ev.target.result; processData(lastFileData); };
-    reader.readAsText(file, 'UTF-8');
+
+    // Zuerst als ArrayBuffer einlesen, um die Kodierung zu erkennen
+    const bufReader = new FileReader();
+    bufReader.onload = (ev) => {
+        const buffer = ev.target.result;
+        const bytes = new Uint8Array(buffer);
+
+        // BOM-Erkennung: UTF-8 BOM = EF BB BF
+        const hasUtf8Bom = bytes[0] === 0xEF && bytes[1] === 0xBB && bytes[2] === 0xBF;
+
+        // Heuristik: Prüfe ob der Text gültige UTF-8 Sequenzen enthält
+        function isValidUtf8(bytes) {
+            let i = hasUtf8Bom ? 3 : 0;
+            while (i < bytes.length) {
+                const b = bytes[i];
+                let extra = 0;
+                if (b <= 0x7F) { i++; continue; }
+                else if (b >= 0xC2 && b <= 0xDF) extra = 1;
+                else if (b >= 0xE0 && b <= 0xEF) extra = 2;
+                else if (b >= 0xF0 && b <= 0xF4) extra = 3;
+                else return false; // ungültiges UTF-8 Startbyte
+                for (let j = 1; j <= extra; j++) {
+                    if (i + j >= bytes.length || (bytes[i + j] & 0xC0) !== 0x80) return false;
+                }
+                i += extra + 1;
+            }
+            return true;
+        }
+
+        let encoding = 'UTF-8';
+        if (!hasUtf8Bom && !isValidUtf8(bytes)) {
+            // Wahrscheinlich Windows-1252 (häufig bei deutschen Windows-Textdateien)
+            encoding = 'windows-1252';
+        }
+
+        const textReader = new FileReader();
+        textReader.onload = (ev2) => {
+            // UTF-8 BOM ggf. entfernen
+            let text = ev2.target.result;
+            if (text.charCodeAt(0) === 0xFEFF) text = text.slice(1);
+            lastFileData = text;
+            processData(lastFileData);
+        };
+        textReader.readAsText(file, encoding);
+    };
+    bufReader.readAsArrayBuffer(file);
 });
 
 function processData(data) {
@@ -655,7 +912,7 @@ function processData(data) {
     current = 0;
     setMascotMood(false);
     triggerMascotAnimation('jump');
-    updateMascot(getRandomElement(greetings));
+    updateMascot(getRandomElement(TEXTE.begruessung));
     showSentence();
 }
 
@@ -672,7 +929,7 @@ textModal.addEventListener('click', (e) => { if (e.target === textModal) textMod
 
 applyTextBtn.addEventListener('click', () => {
     const text = textInputArea.value.trim();
-    if (!text) { alert('Bitte einen Satz eingeben.'); return; }
+    if (!text) { alert(TEXTE.modalLeerFehler); return; }
     lastFileData = text;
     processData(text);
     textModal.style.display = 'none';
@@ -699,11 +956,11 @@ function showSentence() {
     if (current >= sentences.length) {
         setMascotMood(false);
         triggerMascotAnimation('jump');
-        updateMascot("Ausgezeichnet. Du hast alle Sätze richtig gemacht. Du bist ein Deutsch-Profi.");
-        game.innerHTML = '<h3>Super. Alle Sätze gelöst.</h3>';
+        updateMascot(TEXTE.endeMaskott);
+        game.innerHTML = '<h3>' + TEXTE.endeHinweis + '</h3>';
         const btn = document.createElement('button');
         btn.className = 'restart-btn';
-        btn.innerHTML = 'Nochmal spielen';
+        btn.innerHTML = TEXTE.endeBtnNochmal;
         btn.onclick = () => { current = 0; processData(lastFileData); };
         game.appendChild(btn);
         checkBtn.style.display = 'none';
@@ -716,16 +973,16 @@ function showSentence() {
 
     const progress = document.createElement('div');
     progress.className = 'progress';
-    progress.textContent = `Satz ${current + 1} von ${sentences.length}`;
+    progress.textContent = TEXTE.fortschritt.replace('{nr}', current + 1).replace('{gesamt}', sentences.length);
     game.appendChild(progress);
 
     if (current > 0) {
         setMascotMood(false);
-        updateMascot(`Weiter geht es. Hier ist Satz Nummer ${current + 1}:`);
+        updateMascot(TEXTE.naechsterSatz.replace('{nr}', current + 1));
     }
 
     const poolLabel = document.createElement('strong');
-    poolLabel.textContent = 'Bring die Wörter in die richtige Reihenfolge:';
+    poolLabel.textContent = TEXTE.aufgabe;
     game.appendChild(poolLabel);
 
     const pool = createZone('pool');
@@ -792,14 +1049,18 @@ function addTouchDrag(el) {
         const touch   = e.touches[0];
         const rect    = movable.getBoundingClientRect();
 
+        // clientX/Y ist relativ zum Viewport – kein scrollY nötig für fixed-positioning
         offsetX = touch.clientX - rect.left;
         offsetY = touch.clientY - rect.top;
 
         ghost = movable.cloneNode(true);
         ghost.classList.add('touch-ghost');
         ghost.style.width  = rect.width  + 'px';
+        ghost.style.height = rect.height + 'px';
         ghost.style.left   = (touch.clientX - offsetX) + 'px';
         ghost.style.top    = (touch.clientY - offsetY) + 'px';
+        // Pointer-Events deaktivieren damit elementFromPoint funktioniert
+        ghost.style.pointerEvents = 'none';
         document.body.appendChild(ghost);
 
         movable.classList.add('dragging-source');
@@ -812,6 +1073,8 @@ function addTouchDrag(el) {
 
         ghost.style.left = (touch.clientX - offsetX) + 'px';
         ghost.style.top  = (touch.clientY - offsetY) + 'px';
+
+        // Ghost kurz verstecken damit elementFromPoint darunter trifft
         ghost.style.visibility = 'hidden';
         const target = document.elementFromPoint(touch.clientX, touch.clientY);
         ghost.style.visibility = 'visible';
@@ -920,7 +1183,7 @@ function checkSentence() {
     if (normalize(wordsInOrder.join(' ')) === normalize(correctStr)) {
         setMascotMood(false);
         triggerMascotAnimation('jump');
-        updateMascot(getRandomElement(correctComments));
+        updateMascot(getRandomElement(TEXTE.richtig));
         document.getElementById('mascot-container').classList.add('has-heart');
         playStarSound();
         setTimeout(() => { current++; showSentence(); }, 2400);
@@ -931,12 +1194,12 @@ function checkSentence() {
         if (anyMatch) {
             setMascotMood(false);
             triggerMascotAnimation('jump');
-            updateMascot(getRandomElement(partialComments));
+            updateMascot(getRandomElement(TEXTE.teilRichtig));
             playPartial(); 
         } else {
             setMascotMood(true);
             triggerMascotAnimation('shake');
-            updateMascot(getRandomElement(wrongComments));
+            updateMascot(getRandomElement(TEXTE.falsch));
             playWrong(); 
         }
     }
