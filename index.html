@@ -7,7 +7,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<title>Satzpuzzle</title>
+<title>Wortpuzzle</title>
 <style>
     * { box-sizing: border-box; }
 
@@ -41,16 +41,18 @@
     }
 
     #spieltitel .titel-icon {
-        font-size: clamp(28px, 7vw, 38px);
+        font-size: 1em;
         line-height: 1;
         user-select: none;
+        -webkit-text-fill-color: initial;
+        display: inline;
     }
 
     #spieltitel h1 {
         margin: 0;
         font-size: clamp(22px, 6vw, 34px);
         font-weight: 800;
-        letter-spacing: -0.5px;
+        letter-spacing: 0px;
         line-height: 1.1;
         background: linear-gradient(135deg, #2c7be5 0%, #38c172 100%);
         -webkit-background-clip: text;
@@ -480,9 +482,8 @@
 <div id="app-box">
 
 <div id="spieltitel">
-    <span class="titel-icon">🧩</span>
     <div>
-        <h1>Satzpuzzle</h1>
+        <h1>Wort<span class="titel-icon">🧩</span>puzzle</h1>
         <div class="titel-untertitel">Wörter in die richtige Reihenfolge bringen</div>
     </div>
 </div>
@@ -598,7 +599,7 @@ const TEXTE = {
     modalPlatzhalter: "Mein Name ist Matthias.\nIch unterrichte Deutsch.\nViel Spaß!",
     modalUebernehmen: "Text übernehmen",
     modalSchliessen:  "Schließen",
-    modalLeerFehler:  "Bitte einen Satz eingeben.",
+    modalLeerFehler:  "Bitte einen Satz eingeben!",
 
     // Maskottchen – Begrüßung beim Start
     maskottStart: "Hallo! Leider habe ich die Wörter durcheinander gebracht. Bitte hilf mir das Worträtsel zu lösen.",
@@ -607,7 +608,7 @@ const TEXTE = {
     begruessung: [
         "Viel Glück!",
         "Willkommen!",
-        "Viel Erfolg"
+        "Viel Erfolg!"
     ],
 
     // Maskottchen – Antwort richtig gelöst
@@ -628,7 +629,7 @@ const TEXTE = {
     // Maskottchen – falsch
     falsch: [
         "Nur nicht aufgeben!",
-        "Leider falsch!",
+        "Leider noch falsch!",
         "Es ist noch kein Meister vom Himmel gefallen."
     ],
 
@@ -639,7 +640,7 @@ const TEXTE = {
     fortschritt: "Text {nr} von {gesamt}",
 
     // Maskottchen – Übergang zum nächsten Satz  (  {nr} = aktuelle Nummer  )
-    naechsterSatz: "Weiter geht es mit Text-Nummer {nr}:",
+    naechsterSatz: "Weiter geht es mit Text Nummer {nr}:",
 
     // Prüfen-Button
     btnPruefen: "Prüfen",
@@ -971,19 +972,10 @@ function showSentence() {
     const correct = sentences[current];
     const words   = shuffle(correct.split(/\s+/));
 
-    const progress = document.createElement('div');
-    progress.className = 'progress';
-    progress.textContent = TEXTE.fortschritt.replace('{nr}', current + 1).replace('{gesamt}', sentences.length);
-    game.appendChild(progress);
-
     if (current > 0) {
         setMascotMood(false);
         updateMascot(TEXTE.naechsterSatz.replace('{nr}', current + 1));
     }
-
-    const poolLabel = document.createElement('strong');
-    poolLabel.textContent = TEXTE.aufgabe;
-    game.appendChild(poolLabel);
 
     const pool = createZone('pool');
     pool.dataset.correct = correct;
