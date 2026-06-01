@@ -7,7 +7,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<title>Wortpuzzle</title>
+<title>Wörterpuzzle</title>
 <style>
     * { box-sizing: border-box; }
 
@@ -483,7 +483,7 @@
 
 <div id="spieltitel">
     <div>
-        <h1>Wort<span class="titel-icon">🧩</span>puzzle</h1>
+        <h1>Wörter<span class="titel-icon">🧩</span>Puzzle</h1>
         <div class="titel-untertitel">Wörter in die richtige Reihenfolge bringen</div>
     </div>
 </div>
@@ -596,19 +596,19 @@ const TEXTE = {
     // Text-Eingabe-Modal
     modalTitel:       "Text oder Sätze eingeben",
     modalHinweis:     "Jede Textzeile beginnt ein neues Wortpuzzle.",
-    modalPlatzhalter: "Mein Name ist Matthias.\nIch unterrichte Deutsch.\nViel Spaß!",
+    modalPlatzhalter: "Mein Name ist Trautmann.\nIch unterrichte Deutsch.\nViel Spaß beim Spielen!",
     modalUebernehmen: "Text übernehmen",
     modalSchliessen:  "Schließen",
-    modalLeerFehler:  "Bitte einen Satz eingeben!",
+    modalLeerFehler:  "Bitte hier die korrekte Wortfolge eingeben!",
 
     // Maskottchen – Begrüßung beim Start
-    maskottStart: "Hallo! Leider habe ich die Wörter durcheinander gebracht. Bitte hilf mir das Worträtsel zu lösen.",
+    maskottStart: "Hallo! Leider habe ich meine Wörter durcheinander gebracht. Bitte hilf mir das Wörterpuzzle zu lösen.",
 
     // Maskottchen – nach Datei/Text-Eingabe
     begruessung: [
-        "Viel Glück!",
-        "Willkommen!",
-        "Viel Erfolg!"
+        "Viel Glück beim Puzzeln!",
+        "Willkommen in meiner Wörterwelt!",
+        "Viel Spaß!"
     ],
 
     // Maskottchen – Antwort richtig gelöst
@@ -621,15 +621,15 @@ const TEXTE = {
 
     // Maskottchen – Teillösung erkannt
     teilRichtig: [
-        "Nicht schlecht!",
+        "Nicht schlecht bis jetzt!",
         "Wir sind auf dem richten Weg!",
-        "Das kommt schon gut!"
+        "Das kommt schon richtig gut!"
     ],
 
     // Maskottchen – falsch
     falsch: [
         "Nur nicht aufgeben!",
-        "Leider noch falsch!",
+        "Leider noch nicht richtig!",
         "Es ist noch kein Meister vom Himmel gefallen."
     ],
 
@@ -672,7 +672,13 @@ let errorDamping = 0;
 
 // Generative Audio-Variablen (Portal-Style Varianz)
 let proceduralSeed = 1; 
-let currentPattern = [1, 1.2, 1.5, 1.8]; 
+let currentPattern = [1, 1.2, 1.5, 1.8];
+
+// Zeitbasierte Soundkulissen
+let playStartTime = null;
+let melodyIndex = 0;
+const MELODY_NOTES = [523.25, 587.33, 659.25, 698.46, 783.99, 880, 987.77, 1046.50];
+const MELODY_PATTERN = [0, 2, 4, 2, 5, 4, 2, 0, 3, 2, 0, 7, 5, 4, 2, 4]; 
 
 
 function getRandomElement(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
@@ -759,16 +765,18 @@ function getPuzzleProgress() {
 
 function startAmbientMusic() {
     if (!musicEnabled) return;
+    if (!playStartTime) playStartTime = Date.now();
 
     function playBeatStep() {
         if (!musicEnabled) { ambientInterval = null; return; }
         
         const progress = getPuzzleProgress(); 
-        const baseNote = 110; 
+        const baseNote = 110;
+        const elapsed = (Date.now() - playStartTime) / 1000; // Sekunden seit Spielstart
         
         if (errorDamping > 0) errorDamping -= 0.1;
 
-        // LAYER 1: Generative Drone (Variiert je nach Seed)
+        // LAYER 1: Generative Drone (immer aktiv)
         if (beatIndex % 4 === 0) {
             const droneVol = (0.28 - errorDamping * 0.15);
             const dynamicDroneModifier = 1 + (proceduralSeed * 0.02);
@@ -776,16 +784,13 @@ function startAmbientMusic() {
             tone(baseNote * 1.5, 'sine', 0.2, 1.2, Math.max(0.02, droneVol * 0.4), baseNote * 1.502, 900);
         }
 
-        // LAYER 2: Das Interaktive Eingabe-Mosaik (Verändert sich bei JEDER Bewegung)
+        // LAYER 2: Interaktives Arpeggio
         if (progress > 0.1) {
             const noteStep = (beatIndex + Math.floor(proceduralSeed * 10)) % currentPattern.length;
             const arpFreq = baseNote * 2 * currentPattern[noteStep];
             const arpVol = (0.09 + progress * 0.09) * (1 - errorDamping * 0.5);
-            
-            // Jede Interaktion verschiebt die Klangwellen-Struktur minimal (sine/triangle-Wechsel)
             const waveform = proceduralSeed > 0.5 ? 'triangle' : 'sine';
             tone(arpFreq, waveform, 0, 0.22, arpVol, arpFreq * 1.005, 2000);
-            
             if (progress > 0.4 && beatIndex % 2 === 0) {
                 tone(arpFreq * 1.33, 'sine', 0.06, 0.12, 0.04, null, 2500);
             }
@@ -798,6 +803,58 @@ function startAmbientMusic() {
                 tone(1200 + (proceduralSeed * 400), 'triangle', 0, 0.04, clickVol, 400, 3500); 
             } else {
                 tone(180, 'sine', 0, 0.08, clickVol * 1.4, 70, 600); 
+            }
+        }
+
+        // LAYER 4: Sanfte Melodie – setzt nach 2 Minuten ein (fade-in)
+        if (elapsed > 120) {
+            const fadeIn = Math.min(1, (elapsed - 120) / 30); // 30 Sek. Einblenden
+            if (beatIndex % 3 === 0) {
+                const note = MELODY_NOTES[MELODY_PATTERN[melodyIndex % MELODY_PATTERN.length]];
+                melodyIndex++;
+                const melVol = 0.07 * fadeIn * (1 - errorDamping * 0.4);
+                tone(note, 'sine', 0, 0.35, melVol, note * 1.002, 3000);
+                // Sanfte Harmonie dazu
+                if (beatIndex % 6 === 0) {
+                    tone(note * 1.5, 'sine', 0.1, 0.25, melVol * 0.4, note * 1.502, 2500);
+                }
+            }
+        }
+
+        // LAYER 5: Naturgeräusche (Wind & Vogelzwitschern) – nach 5 Minuten
+        if (elapsed > 300) {
+            const fadeIn = Math.min(1, (elapsed - 300) / 60);
+            // Wind: Rauschen durch schnell modulierten Sinus
+            if (beatIndex % 8 === 0) {
+                const windFreq = 80 + Math.random() * 40;
+                tone(windFreq, 'sine', 0, 1.8, 0.04 * fadeIn, windFreq * (0.95 + Math.random() * 0.1), 400);
+                tone(windFreq * 1.2, 'sine', 0.3, 1.4, 0.02 * fadeIn, windFreq * 1.1, 350);
+            }
+            // Vogelzwitschern: kurze hohe Töne mit Frequenzglide
+            if (beatIndex % 13 === 0 && Math.random() > 0.4) {
+                const birdBase = 1800 + Math.random() * 800;
+                tone(birdBase, 'sine', 0,    0.06, 0.06 * fadeIn, birdBase * 1.3, 4000);
+                tone(birdBase * 1.3, 'sine', 0.07, 0.05, 0.05 * fadeIn, birdBase * 0.9, 4000);
+                tone(birdBase * 0.9, 'sine', 0.13, 0.06, 0.04 * fadeIn, birdBase * 1.1, 4000);
+            }
+        }
+
+        // LAYER 6: Vollerer Orchestersound – nach 10 Minuten
+        if (elapsed > 600) {
+            const fadeIn = Math.min(1, (elapsed - 600) / 60);
+            // Streicher-ähnlicher Pad (Sawtooth mit starkem Tiefpassfilter)
+            if (beatIndex % 4 === 0) {
+                const padNotes = [baseNote * 2, baseNote * 2.5, baseNote * 3];
+                padNotes.forEach((freq, i) => {
+                    tone(freq, 'sawtooth', i * 0.05, 1.6, 0.04 * fadeIn, freq * 1.001, 500);
+                });
+            }
+            // Perkussion: sanfte Trommel
+            if (beatIndex % 8 === 0) {
+                tone(60, 'sine', 0, 0.12, 0.1 * fadeIn, 30, 300);
+            }
+            if (beatIndex % 8 === 4) {
+                tone(200, 'triangle', 0, 0.05, 0.06 * fadeIn, 150, 800);
             }
         }
 
@@ -911,6 +968,8 @@ document.getElementById('fileInput').addEventListener('change', function(e) {
 function processData(data) {
     sentences = data.split(/\r?\n/).map(t => t.trim()).filter(t => t.length > 0);
     current = 0;
+    playStartTime = Date.now();
+    melodyIndex = 0;
     setMascotMood(false);
     triggerMascotAnimation('jump');
     updateMascot(getRandomElement(TEXTE.begruessung));
