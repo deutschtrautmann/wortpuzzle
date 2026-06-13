@@ -833,7 +833,11 @@
 const TEXTE = {
 
     // Beispiel-Sätze beim ersten Start (eine Zeile = ein Satz)
-    beispiel: "eins zwei drei vier fünf sechs sieben acht neun zehn elf zwölf",
+    beispiel: `eins zwei drei vier fünf sechs sieben acht neun zehn elf zwölf
+Montag Dienstag Mittwoch Donnerstag Freitag Samstag Sonntag
+Januar Februar März April Mai Juni Juli August September Oktober November Dezember
+Paul geht jeden Tag mit seinem Hund Bello im Park spazieren.
+Ich stehe um sieben Uhr auf. Um halb acht frühstücke ich und fahre dann zur Arbeit. Ich arbeite jeden Tag acht Stunden. Ich komme meistens um sechs wieder nach Hause zurück. Nach dem Abendessen sehe ich noch fern und gehe danach ins Bett.`,
 
     // Obere Schaltflächen
     btnDatei:      "Textdatei",
@@ -913,7 +917,7 @@ document.getElementById('applyTextBtn').textContent     = TEXTE.modalUebernehmen
 document.getElementById('closeTextBtn').textContent     = TEXTE.modalSchliessen;
 
 // ── Daten & Zustand ───────────────────────────────────────────────
-let sentences = [TEXTE.beispiel];
+let sentences = TEXTE.beispiel.split(/\r?\n/).map(t => t.trim()).filter(t => t.length > 0);
 let current = 0;
 let lastFileData = "";
 let errorDamping = 0;
