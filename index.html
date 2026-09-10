@@ -1,11 +1,13 @@
 <!DOCTYPE html>
+<html lang="de">
+<head>
 <!--
   Wörterpuzzle — © 2026 deutschtrautmann
   Alle Rechte vorbehalten. Keine Weitergabe, kein Weiterbetrieb unter eigenem Namen
   oder auf anderen Domains ohne ausdrückliche Erlaubnis der Autorin/des Autors.
 -->
-<html lang="de">
-<head>
+<!--
+-->
 <meta charset="UTF-8">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
@@ -44,7 +46,85 @@
         margin: 0 0 18px 0;
         display: flex;
         align-items: center;
+        flex-wrap: wrap;
         gap: 10px;
+    }
+
+    /* Thema-Auswahl: natives Pulldown-Menü, in der oberen Werkzeugleiste
+       ganz links neben "Textdatei" – bewusst gleich breit wie die
+       Knöpfe "Textdatei" und "Texteingabe" (siehe .top-button, #fileLabel). */
+    .thema-select {
+        flex: 1 1 90px;
+        max-width: 120px;
+        height: 34px;
+        background: #fff;
+        border: 2px solid #b7c7dd;
+        border-radius: 10px;
+        padding: 0 6px;
+        font-size: clamp(10px, 2.6vw, 12px);
+        font-weight: 700;
+        color: #2c3e6b;
+        box-sizing: border-box;
+        font-family: -apple-system, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+        cursor: pointer;
+        touch-action: manipulation;
+    }
+    .thema-select:focus { outline: none; border-color: #4a90d9; }
+
+    /* Lautsprecher-Symbol: schlicht, einfarbig, ohne Button-Optik –
+       sitzt direkt neben dem Titel (rechts in der Titelzeile). */
+    .icon-plain-button {
+        flex: 0 0 auto;
+        width: 30px;
+        height: 30px;
+        min-width: 0;
+        min-height: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: none;
+        border: none;
+        box-shadow: none;
+        border-radius: 8px;
+        padding: 4px;
+        margin: 0 0 0 auto;
+        cursor: pointer;
+        touch-action: manipulation;
+        -webkit-tap-highlight-color: transparent;
+        color: #6b7c99;
+        position: static;
+        overflow: visible;
+    }
+    /* Verhindert, dass der generische Glanz-Overlay aller <button>-Elemente
+       (button::before) hier als zusätzliche helle Fläche über dem Icon
+       durchscheint. */
+    .icon-plain-button::before { content: none; }
+    .icon-plain-button svg { width: 100%; height: 100%; display: block; }
+    .icon-plain-button:active { opacity: 0.6; }
+    @media (hover: hover) {
+        .icon-plain-button:hover { color: #4a90d9; }
+    }
+
+    #themaBox {
+        margin-bottom: 14px;
+    }
+
+    #themaLabel {
+        display: block;
+        font-size: 13px;
+        font-weight: 600;
+        color: #667;
+        margin-bottom: 6px;
+    }
+
+    #themaInputArea {
+        width: 100%;
+        border: 2px solid #b7c7dd;
+        border-radius: 12px;
+        padding: 10px 14px;
+        font-size: 16px;
+        font-family: inherit;
+        box-sizing: border-box;
     }
 
     #spieltitel .titel-icon {
@@ -106,6 +186,7 @@
         -moz-user-select: none;
         border: 1px solid #ddd;
         font-size: clamp(14px, 3.5vw, 17px);
+        font-weight: 700;
         display: inline-block;
         touch-action: none;
         transition: box-shadow 0.15s, transform 0.22s cubic-bezier(0.25, 0.46, 0.45, 0.94);
@@ -212,7 +293,9 @@
         box-shadow: 0 1px 0 #21618c, 0 2px 5px rgba(0,0,0,0.2);
     }
     #checkBtn {
-        max-width: 220px;
+        max-width: 170px;
+        margin-left: auto;
+        margin-right: auto;
         padding: clamp(10px, 3vw, 13px) clamp(16px, 4vw, 20px);
         font-size: clamp(13px, 3.5vw, 16px);
         min-height: 40px;
@@ -259,6 +342,7 @@
         border-radius: 999px;
         padding: 0 12px;
         font-size: clamp(10px, 2.6vw, 12px);
+        font-weight: 700;
         cursor: pointer;
         color: #333;
         box-sizing: border-box;
@@ -435,7 +519,7 @@
         padding: 12px 18px;
         border-radius: 14px;
         position: relative;
-        border: 1px solid #d4ebd4;
+        border: 3px solid #d4ebd4;
         box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         flex: 0 1 auto;
         min-width: 0;
@@ -457,7 +541,7 @@
         margin: 0;
         font-size: clamp(13px, 3.5vw, 16px);
         line-height: 1.4;
-        font-weight: 500;
+        font-weight: 700;
         color: #2c3e50;
     }
 
@@ -601,7 +685,7 @@
     @media (max-width: 360px) {
         #app-box { padding: 10px; }
         .top-controls { gap: 4px; }
-        .top-button, #fileLabel {
+        .top-button, #fileLabel, .thema-select {
             font-size: 9px;
             padding: 0 5px;
             height: 28px;
@@ -609,6 +693,7 @@
             max-width: 95px;
         }
         #spieltitel h1 { font-size: 20px; }
+        .icon-plain-button { width: 26px; height: 26px; }
         .word {
             padding: 8px 12px;
             font-size: 13px;
@@ -623,7 +708,7 @@
     @media (min-width: 361px) and (max-width: 480px) {
         #app-box { padding: 12px; }
         .top-controls { gap: 5px; }
-        .top-button, #fileLabel { font-size: 10px; padding: 0 6px; height: 30px; max-width: 105px; }
+        .top-button, #fileLabel, .thema-select { font-size: 10px; padding: 0 6px; height: 30px; max-width: 105px; }
     }
 
     /* ── Kurze Bildschirme im Hochformat ──────────────────────── */
@@ -657,7 +742,7 @@
         #app-box {
             padding: 20px 24px;
         }
-        .top-button, #fileLabel {
+        .top-button, #fileLabel, .thema-select {
             font-size: 11px;
             max-width: 130px;
         }
@@ -683,7 +768,7 @@
             box-shadow: 0 6px 28px rgba(0,0,0,0.09);
         }
         .word { font-size: 16px; }
-        .top-button, #fileLabel { max-width: 130px; font-size: 11px; }
+        .top-button, #fileLabel, .thema-select { max-width: 130px; font-size: 11px; }
     }
 
     /* ── Desktop & Mac (ab 700px, allgemein) ─────────────────── */
@@ -709,7 +794,7 @@
         .restart-btn { max-width: 300px; }
         #checkBtn { max-width: 200px; }
         /* Top-Buttons etwas größer, aber weiterhin kompakt */
-        .top-button, #fileLabel {
+        .top-button, #fileLabel, .thema-select {
             height: 38px;
             font-size: 12px;
             max-width: 135px;
@@ -815,18 +900,22 @@
             box-shadow: 0 2px 6px rgba(0,0,0,0.3);
         }
         .group {
-            background: rgba(76,175,80,0.12);
-            border-color: #4CAF50;
+            background: rgba(229,83,79,0.14);
+            border-color: #e5534f;
         }
         #mascot-container {
-            background: #1e2d20;
-            border-color: #3a6a3a;
+            background: #2d1e1e;
+            border-color: #d9756f;
         }
         #mascot-speech-bubble {
-            background: #2e3a2e;
-            border-color: #3a6a3a;
+            background: #3a2e2e;
+            border-color: #d9756f;
         }
-        #mascot-text { color: #d0e8d0; }
+        #mascot-text { color: #f0d0d0; }
+        .icon-plain-button { color: #b8c8e0; }
+        @media (hover: hover) {
+            .icon-plain-button:hover { color: #e8eaf0; }
+        }
         .top-button, #fileLabel {
             background: linear-gradient(180deg, #333d58 0%, #2a3555 60%, #232c48 100%);
             border-color: #4a72b0;
@@ -839,6 +928,13 @@
             border-color: #4a5270;
             color: #e8eaf0;
         }
+        .thema-select {
+            background: #1a1f2e;
+            border-color: #4a5270;
+            color: #e8eaf0;
+        }
+        #themaLabel { color: #b8c8e0; }
+        #themaInputArea { background: #1a1f2e; border-color: #4a5270; color: #e8eaf0; }
     }
 
     /* ── Reduzierte Bewegung (Barrierefreiheit) ───────────────── */
@@ -868,12 +964,13 @@
         <h1>Wörter<span class="titel-icon">🧩</span>Puzzle</h1>
         <div class="titel-untertitel">Wörter in die richtige Reihenfolge bringen</div>
     </div>
+    <button id="musicToggleBtn" class="icon-plain-button" type="button"></button>
 </div>
 
 <div class="top-controls">
+    <select id="themaSelect" class="thema-select"></select>
     <label id="fileLabel" class="top-button" for="fileInput"></label>
     <div id="textInputBtn" class="top-button"></div>
-    <div id="musicToggleBtn" class="top-button"></div>
 </div>
 
 <input type="file" id="fileInput" accept=".txt">
@@ -882,6 +979,10 @@
     <div id="textModalContent">
         <h3 id="modalTitel"></h3>
         <p id="modalHinweis"></p>
+        <div id="themaBox">
+            <label id="themaLabel" for="themaInputArea"></label>
+            <input type="text" id="themaInputArea" autocomplete="off">
+        </div>
         <textarea id="textInputArea"></textarea>
 
         <div class="modal-buttons">
@@ -971,6 +1072,6 @@
 </div>
 
 <script>// Wörterpuzzle — © 2026 deutschtrautmann — alle Rechte vorbehalten.
-const _wpOrigin=Object.freeze({owner:"deutschtrautmann",build:"2026-09"});!function(){try{console.log("%cWörterpuzzle © "+_wpOrigin.owner,"color:#888;font-size:10px;padding:2px 0;")}catch(e){}}();const TEXTE={beispiel:"eins zwei drei vier fünf sechs sieben acht neun zehn elf zwölf\nMontag Dienstag Mittwoch Donnerstag Freitag Samstag Sonntag\nJanuar Februar März April Mai Juni Juli August September Oktober November Dezember\nPaul geht jeden Tag mit seinem Hund Bello im Park spazieren.\nIch stehe um sieben Uhr auf. Um halb acht frühstücke ich und fahre dann zur Arbeit. Ich arbeite jeden Tag acht Stunden. Ich komme meistens um sechs wieder nach Hause zurück. Nach dem Abendessen sehe ich noch fern und gehe danach ins Bett.",btnDatei:"Textdatei",btnEingabe:"Texteingabe",btnMusikAn:"Musik an",btnMusikAus:"Musik aus",modalTitel:"Text oder Sätze eingeben",modalHinweis:"Jede Textzeile beginnt ein neues Wörterpuzzle.",modalPlatzhalter:"Mein Name ist Trautmann.\nIch unterrichte Deutsch.\nViel Spaß beim Spielen!",modalUebernehmen:"Text übernehmen",modalSpeichern:"Speichern",modalSchliessen:"Schließen",modalLeerFehler:"Bitte hier die richtige Wortfolge eingeben!",maskottStart:"Hallo! Leider habe ich meine Wörter durcheinander gebracht. Bitte hilf mir das Wörterpuzzle zu lösen.",begruessung:["Viel Erfolg!","Willkommen zu einem neuen Wörterpuzzle!","Viel Spaß beim Knobeln!","Auf geht's, ich bin bereit!","Lass sehen, was du kannst!","Auf uns wartet de nächste Runde!","Ein neues Puzzle, viel Spaß dabei!","Ich drücke dir die Daumen!"],richtig:["Wunderbar!","Perfekt!","Ausgezeichnet!","Fantastisch!","Ganz genau!","Sehr schön!","Hervorragend!","Klasse gelöst!","Genau ins Schwarze getroffen!","Bravo!","Da kannst schon richtig gut Deutsch!","Gut, weiter so!"],teilRichtig:["Nicht schlecht bis jetzt!","Wir sind auf einem guten Weg!","Das kommt schon richtig gut!","Weiter so!","Einige Wörter sind bereits gefunden!","Etwas haben wir schon geschafft!","Bald geschafft, bleib dran!","Du hast Talent!"],falsch:["Nur nicht aufgeben!","Das war leider noch nicht richtig, aber das wird schon!","Es ist noch kein Meister vom Himmel gefallen.","Kopf hoch, das klappt beim nächsten Mal!","Versuch es noch einmal, ich glaube an dich!","So ganz passt das noch nicht zusammen, weiter geht's.","Schau dir die Wörter in Ruhe noch einmal an.","Noch nicht ganz richtig, machen wir einen neuen Versuch."],aufgabe:"Bringe die Wörter in die richtige Reihenfolge:",fortschritt:"Text {nr} von {gesamt}",naechsterSatz:"Weiter geht es mit Text Nummer {nr}:",btnPruefen:"Prüfen",endeHinweis:"Alles perfekt gelöst!",endeMaskott:"Du bist jetzt ein Satzbau-Meister!",endeBtnNochmal:"Nochmal spielen"};document.getElementById("fileLabel").textContent=TEXTE.btnDatei,document.getElementById("textInputBtn").textContent=TEXTE.btnEingabe,document.getElementById("musicToggleBtn").textContent=TEXTE.btnMusikAn,document.getElementById("checkBtn").textContent=TEXTE.btnPruefen,updateMascot(TEXTE.maskottStart),document.getElementById("modalTitel").textContent=TEXTE.modalTitel,document.getElementById("modalHinweis").textContent=TEXTE.modalHinweis,document.getElementById("textInputArea").placeholder=TEXTE.modalPlatzhalter,document.getElementById("applyTextBtn").textContent=TEXTE.modalUebernehmen,document.getElementById("saveTextBtn").textContent=TEXTE.modalSpeichern,document.getElementById("closeTextBtn").textContent=TEXTE.modalSchliessen;let sentences=TEXTE.beispiel.split(/\r?\n/).map(e=>e.trim()).filter(e=>e.length>0),current=0,lastFileData="",errorDamping=0,proceduralSeed=1,currentPattern=[1,1.2,1.5,1.8],playStartTime=null,melodyIndex=0;const MELODY_NOTES=[523.25,587.33,659.25,698.46,783.99,880,987.77,1046.5],MELODY_PATTERN=[0,2,4,2,5,4,2,0,3,2,0,7,5,4,2,4];function getRandomElement(e){return e[Math.floor(Math.random()*e.length)]}function triggerMascotAnimation(e){const t=document.getElementById("mascot-image");t.classList.remove("animate-jump","animate-shake"),t.offsetWidth,"jump"===e?t.classList.add("animate-jump"):"shake"===e&&t.classList.add("animate-shake")}const SLEEP_DELAY=2e4;let sleepTimer=null,isSleeping=!1;function wakeUpMascot(){isSleeping?(isSleeping=!1,document.getElementById("mascot-container").classList.remove("is-sleeping"),resetSleepTimer()):resetSleepTimer()}function putMascotToSleep(){isSleeping||(isSleeping=!0,document.getElementById("mascot-container").classList.add("is-sleeping"))}function resetSleepTimer(){sleepTimer&&clearTimeout(sleepTimer),sleepTimer=setTimeout(putMascotToSleep,2e4)}function handleGlobalInteraction(){wakeUpMascot(),audioCtx&&"suspended"===audioCtx.state&&audioCtx.resume()}function shiftProceduralMusic(){proceduralSeed=Math.random();const e=[[1,1.2,1.33,1.5,1.6,1.8,2],[1,1.25,1.44,1.5,1.75,1.875,2],[1,1.125,1.35,1.5,1.6,1.9,2]];currentPattern=e[Math.floor(proceduralSeed*e.length)]}["mousedown","touchstart","keydown","dragstart"].forEach(e=>{document.addEventListener(e,handleGlobalInteraction,{passive:!0})}),document.addEventListener("visibilitychange",()=>{!document.hidden&&audioCtx&&"suspended"===audioCtx.state&&audioCtx.resume()}),resetSleepTimer();let audioCtx=null,ambientStarted=!1,ambientInterval=null,musicEnabled=!0,beatIndex=0;function initAudio(){try{if(!audioCtx){const e=window.AudioContext||window.webkitAudioContext;if(!e)return;audioCtx=new e}"suspended"===audioCtx.state&&audioCtx.resume(),ambientStarted||(ambientStarted=!0,startAmbientMusic())}catch(e){audioCtx=null}}function tone(e,t="sine",n=0,a=.18,o=.15,s=null,i=2200){if(audioCtx&&"suspended"!==audioCtx.state)try{const r=audioCtx.createOscillator(),l=audioCtx.createGain(),c=audioCtx.createBiquadFilter();c.type="lowpass",c.frequency.value=i,r.type=t;const d=audioCtx.currentTime+n;r.frequency.setValueAtTime(e,d),s&&r.frequency.exponentialRampToValueAtTime(s,d+a),l.gain.setValueAtTime(.001,d),l.gain.linearRampToValueAtTime(o,d+.02),l.gain.exponentialRampToValueAtTime(.001,d+a),r.connect(c),c.connect(l),l.connect(audioCtx.destination),r.start(d),r.stop(d+a)}catch(e){}}function getPuzzleProgress(){const e=document.querySelector(".pool");if(!e)return 0;const t=e.querySelectorAll(".word").length;return t<=1?1:e.querySelectorAll(".group .word").length/t}function startAmbientMusic(){musicEnabled&&(playStartTime||(playStartTime=Date.now()),function e(){if(!musicEnabled)return void(ambientInterval=null);const t=getPuzzleProgress(),n=(Date.now()-playStartTime)/1e3;if(errorDamping>0&&(errorDamping-=.1),beatIndex%4==0){const e=.28-.15*errorDamping;tone(110*(1+.02*proceduralSeed),"sine",0,1.4,Math.max(.05,e),110.22,800),tone(165,"sine",.2,1.2,Math.max(.02,.4*e),165.22,900)}if(t>.1){const e=(beatIndex+Math.floor(10*proceduralSeed))%currentPattern.length,n=220*currentPattern[e];tone(n,proceduralSeed>.5?"triangle":"sine",0,.22,(.09+.09*t)*(1-.5*errorDamping),1.005*n,2e3),t>.4&&beatIndex%2==0&&tone(1.33*n,"sine",.06,.12,.04,null,2500)}if(t>.6){const e=.05+.04*t;beatIndex%2==0?tone(1200+400*proceduralSeed,"triangle",0,.04,e,400,3500):tone(180,"sine",0,.08,1.4*e,70,600)}if(n>120){const e=Math.min(1,(n-120)/30);if(beatIndex%3==0){const t=MELODY_NOTES[MELODY_PATTERN[melodyIndex%MELODY_PATTERN.length]];melodyIndex++;const n=.07*e*(1-.4*errorDamping);tone(t,"sine",0,.35,n,1.002*t,3e3),beatIndex%6==0&&tone(1.5*t,"sine",.1,.25,.4*n,1.502*t,2500)}}if(n>300){const e=Math.min(1,(n-300)/60);if(beatIndex%8==0){const t=80+40*Math.random();tone(t,"sine",0,1.8,.04*e,t*(.95+.1*Math.random()),400),tone(1.2*t,"sine",.3,1.4,.02*e,1.1*t,350)}if(beatIndex%13==0&&Math.random()>.4){const t=1800+800*Math.random();tone(t,"sine",0,.06,.06*e,1.3*t,4e3),tone(1.3*t,"sine",.07,.05,.05*e,.9*t,4e3),tone(.9*t,"sine",.13,.06,.04*e,1.1*t,4e3)}}if(n>600){const e=Math.min(1,(n-600)/60);beatIndex%4==0&&[220,275,330].forEach((t,n)=>{tone(t,"sawtooth",.05*n,1.6,.04*e,1.001*t,500)}),beatIndex%8==0&&tone(60,"sine",0,.12,.1*e,30,300),beatIndex%8==4&&tone(200,"triangle",0,.05,.06*e,150,800)}beatIndex++,ambientInterval=setTimeout(e,460)}())}function playPop(){shiftProceduralMusic();const e=540+120*Math.random();tone(e,"sine",0,.08,.22,e+100,2500),tone(2*e,"triangle",.02,.04,.09,2*e,3e3)}function playClick(){shiftProceduralMusic(),tone(280+60*Math.random(),"triangle",0,.05,.25,340,1500)}function playPartial(){shiftProceduralMusic(),[440,554,659].map(e=>e*(1+.02*Math.random())).forEach((e,t)=>{tone(e,"triangle",.08*t,.2,.18,1.02*e,2200)})}function playWrong(){shiftProceduralMusic(),errorDamping=1,tone(190,"sawtooth",0,.35,.35,80,800),tone(130,"triangle",.08,.3,.25,50,600)}function playStarSound(){[523.25,659.25,783.99,1046.5,1318.51,1567.98].forEach((e,t)=>{tone(e,"sine",.05*t,.2,.16,1.01*e,3500)})}const musicToggleBtn=document.getElementById("musicToggleBtn");function processData(e){sentences=e.split(/\r?\n/).map(e=>e.trim()).filter(e=>e.length>0),current=0,playStartTime=Date.now(),melodyIndex=0,setMascotMood(!1),triggerMascotAnimation("jump"),updateMascot(getRandomElement(TEXTE.begruessung)),showSentence()}musicToggleBtn.addEventListener("click",()=>{musicEnabled=!musicEnabled,musicEnabled?(musicToggleBtn.textContent=TEXTE.btnMusikAn,ambientStarted&&!ambientInterval&&startAmbientMusic()):(musicToggleBtn.textContent=TEXTE.btnMusikAus,ambientInterval&&(clearTimeout(ambientInterval),ambientInterval=null)),playClick()}),document.getElementById("fileInput").addEventListener("change",function(e){const t=e.target.files[0];if(!t)return;const n=new FileReader;n.onload=e=>{const n=e.target.result,a=new Uint8Array(n),o=239===a[0]&&187===a[1]&&191===a[2];let s="UTF-8";o||function(e){let t=o?3:0;for(;t<e.length;){const n=e[t];let a=0;if(n<=127)t++;else{if(n>=194&&n<=223)a=1;else if(n>=224&&n<=239)a=2;else{if(!(n>=240&&n<=244))return!1;a=3}for(let n=1;n<=a;n++)if(t+n>=e.length||128!=(192&e[t+n]))return!1;t+=a+1}}return!0}(a)||(s="windows-1252");const i=new FileReader;i.onload=e=>{let t=e.target.result;65279===t.charCodeAt(0)&&(t=t.slice(1)),lastFileData=t,processData(lastFileData)},i.readAsText(t,s)},n.readAsArrayBuffer(t)});const textInputBtn=document.getElementById("textInputBtn"),textModal=document.getElementById("textModal"),textInputArea=document.getElementById("textInputArea"),applyTextBtn=document.getElementById("applyTextBtn"),saveTextBtn=document.getElementById("saveTextBtn"),closeTextBtn=document.getElementById("closeTextBtn");function downloadTextFile(e,t){const n=new Blob([t],{type:"text/plain;charset=utf-8"}),a=URL.createObjectURL(n),o=document.createElement("a");o.href=a,o.download=e,document.body.appendChild(o),o.click(),document.body.removeChild(o),setTimeout(()=>URL.revokeObjectURL(a),1e3)}function shuffle(e){return e.sort(()=>Math.random()-.5)}textInputBtn.addEventListener("click",()=>{textModal.style.display="flex",textInputArea.focus()}),closeTextBtn.addEventListener("click",()=>{textModal.style.display="none"}),textModal.addEventListener("click",e=>{e.target===textModal&&(textModal.style.display="none")}),applyTextBtn.addEventListener("click",()=>{const e=textInputArea.value.trim();e?(lastFileData=e,processData(e),textModal.style.display="none",playClick()):alert(TEXTE.modalLeerFehler)}),saveTextBtn.addEventListener("click",()=>{const e=textInputArea.value.trim();e?(downloadTextFile("saetze.txt",e),playClick()):alert(TEXTE.modalLeerFehler)}),window.onload=()=>{lastFileData=sentences[0],showSentence()};var mascotHideTimer=null;function updateMascot(e){const t=document.getElementById("mascot-text"),n=document.getElementById("mascot-speech-bubble");clearTimeout(mascotHideTimer),t.textContent=e,n.style.display=e?"":"none",e&&(mascotHideTimer=setTimeout(()=>{t.textContent="",n.style.display="none"},3e3))}function setMascotMood(e){const t=document.getElementById("mascot-image");e?t.classList.add("is-sad"):t.classList.remove("is-sad")}function showSentence(){const e=document.getElementById("game"),t=document.getElementById("checkBtn");if(current>=sentences.length){setMascotMood(!1),triggerMascotAnimation("jump"),updateMascot(TEXTE.endeMaskott),t.style.display="none",document.getElementById("mascot-container").classList.remove("has-heart");const n=document.createElement("button");return n.className="restart-btn",n.innerHTML=TEXTE.endeBtnNochmal,n.onclick=()=>{current=0,processData(lastFileData)},void e.appendChild(n)}e.innerHTML="",document.getElementById("mascot-container").classList.remove("has-heart"),t.style.display="block";const n=sentences[current],a=shuffle(n.split(/\s+/));current>0&&(setMascotMood(!1),updateMascot(TEXTE.naechsterSatz.replace("{nr}",current+1)));const o=createZone("pool");o.dataset.correct=n,a.forEach(e=>o.appendChild(createWord(e))),e.appendChild(o)}function createWord(e){const t=document.createElement("div");return t.className="word",t.textContent=e,addDragEvents(t),t}function createZone(e){const t=document.createElement("div");return t.className="container "+e,t.addEventListener("dragover",e=>{if(e.preventDefault(),t.classList.add("drag-over"),!mouseSource)return;const n=getMovable(mouseSource),a=getDragAfterElement(t,e.clientX,e.clientY);flipInsert(t,n,a)}),t.addEventListener("dragleave",()=>t.classList.remove("drag-over")),t.addEventListener("drop",e=>{e.preventDefault(),t.classList.remove("drag-over"),playPop(),mouseSource=null}),t}let mouseSource=null;function addDragEvents(e){e.draggable=!0,e.addEventListener("dragstart",t=>{mouseSource=e,initAudio(),setTimeout(()=>getMovable(e).classList.add("dragging-source"),0)}),e.addEventListener("dragend",()=>{mouseSource&&getMovable(mouseSource).classList.remove("dragging-source"),mouseSource=null}),addTouchDrag(e)}function addTouchDrag(e){let t=null,n=null,a=0,o=0;e.addEventListener("touchstart",s=>{initAudio(),n=e;const i=getMovable(e),r=s.touches[0],l=i.getBoundingClientRect();a=r.clientX-l.left,o=r.clientY-l.top,t=i.cloneNode(!0),t.classList.add("touch-ghost"),t.style.width=l.width+"px",t.style.height=l.height+"px",t.style.left=r.clientX-a+"px",t.style.top=r.clientY-o+"px",t.style.pointerEvents="none",document.body.appendChild(t),i.classList.add("dragging-source")},{passive:!0}),e.addEventListener("touchmove",e=>{if(!n||!t)return;e.preventDefault();const s=e.touches[0];t.style.left=s.clientX-a+"px",t.style.top=s.clientY-o+"px",t.style.visibility="hidden";const i=document.elementFromPoint(s.clientX,s.clientY);t.style.visibility="visible";const r=i&&i.closest(".container");r&&(document.querySelectorAll(".container").forEach(e=>e.classList.remove("drag-over")),r.classList.add("drag-over"),flipInsert(r,getMovable(n),getDragAfterElement(r,s.clientX,s.clientY)))},{passive:!1});const s=()=>{t&&(t.remove(),t=null),n&&(getMovable(n).classList.remove("dragging-source"),n=null),document.querySelectorAll(".container").forEach(e=>e.classList.remove("drag-over")),playPop()};e.addEventListener("touchend",s),e.addEventListener("touchcancel",s)}function getMovable(e){const t=e.parentElement;return t&&t.classList.contains("group")?t:e}function flipInsert(e,t,n){const a=[...e.querySelectorAll(".word:not(.group .word), .group")].filter(e=>e!==t),o=new Map;a.forEach(e=>{const t=e.getBoundingClientRect();o.set(e,{x:t.left,y:t.top})}),null==n?e.appendChild(t):e.insertBefore(t,n),a.forEach(e=>{const t=o.get(e);if(!t)return;const n=e.getBoundingClientRect(),a=t.x-n.left,s=t.y-n.top;Math.abs(a)<1&&Math.abs(s)<1||(e.style.transition="none",e.style.transform=`translate(${a}px, ${s}px)`,requestAnimationFrame(()=>{requestAnimationFrame(()=>{e.style.transition="",e.style.transform=""})}))})}function getDragAfterElement(e,t,n){const a=[...e.querySelectorAll(".word:not(.group .word), .group:not(.dragging-source)")];if(0===a.length)return null;const o=[];a.forEach(e=>{const t=e.getBoundingClientRect(),n=t.top+t.height/2;let a=o.find(e=>Math.abs(e.mid-n)<.6*t.height);a||(a={mid:n,els:[]},o.push(a)),a.els.push(e)}),o.sort((e,t)=>e.mid-t.mid);let s=o[0],i=1/0;o.forEach(e=>{const t=Math.abs(e.mid-n);t<i&&(i=t,s=e)});const r=s.els.slice().sort((e,t)=>e.getBoundingClientRect().left-t.getBoundingClientRect().left);for(const e of r){const n=e.getBoundingClientRect();if(t<n.left+n.width/2)return e}const l=o.indexOf(s);return l<o.length-1?o[l+1].els.slice().sort((e,t)=>e.getBoundingClientRect().left-t.getBoundingClientRect().left)[0]:null}function normalize(e){return e.replace(/[.,!?;:]/g,"").replace(/\s+/g," ").trim()}function checkSentence(){const e=document.querySelector(".pool");if(!e)return;const t=[...e.querySelectorAll(".word")].map(e=>e.textContent),n=e.dataset.correct;if(normalize(t.join(" "))===normalize(n))setMascotMood(!1),triggerMascotAnimation("jump"),updateMascot(getRandomElement(TEXTE.richtig)),document.getElementById("mascot-container").classList.add("has-heart"),playStarSound(),setTimeout(()=>{current++,showSentence()},2400);else{let t=!1;for(;updateGroupsOnce(e,n);)t=!0;t?(setMascotMood(!1),triggerMascotAnimation("jump"),updateMascot(getRandomElement(TEXTE.teilRichtig)),playPartial()):(setMascotMood(!0),triggerMascotAnimation("shake"),updateMascot(getRandomElement(TEXTE.falsch)),playWrong())}}function getElementWords(e){return e.classList.contains("word")?[e.textContent]:[...e.querySelectorAll(".word")].map(e=>e.textContent)}function updateGroupsOnce(e,t){const n=t.split(/\s+/),a=[...e.querySelectorAll(".word:not(.group .word), .group")];function o(e,t=[]){for(let a=0;a<=n.length-e.length;a++){let o=!0;for(let t=0;t<e.length;t++)if(normalize(e[t])!==normalize(n[a+t])){o=!1;break}if(!o)continue;let s=!1;for(const n of t)if(!(a+e.length-1<n.start||a>n.end)){s=!0;break}if(!s)return a}return-1}const s=[];a.forEach(e=>{if(e.classList.contains("group")){const t=parseInt(e.dataset.start),n=parseInt(e.dataset.end);isNaN(t)||isNaN(n)||s.push({start:t,end:n})}});for(let t=0;t<a.length-1;t++){const n=a[t],i=a[t+1],r=getElementWords(n),l=getElementWords(i),c=[...r,...l];let d,u=!1,m=-1;if(n.classList.contains("group")&&i.classList.contains("group"))parseInt(n.dataset.end)+1===parseInt(i.dataset.start)&&(u=!0,m=parseInt(n.dataset.start));else if(n.classList.contains("group")){const e=parseInt(n.dataset.end);o(l,s.filter(e=>!(e.start===parseInt(n.dataset.start)&&e.end===parseInt(n.dataset.end))))===e+1&&(u=!0,m=parseInt(n.dataset.start))}else if(i.classList.contains("group")){const e=parseInt(i.dataset.start),t=o(r,s.filter(t=>!(t.start===parseInt(e)&&t.end===parseInt(i.dataset.end))));t+r.length===e&&(u=!0,m=t)}else m=o(c,s),-1!==m&&(u=!0);if(u)return n.classList.contains("group")?(d=n,i.classList.contains("group")?([...i.querySelectorAll(".word")].forEach(e=>d.appendChild(e)),d.dataset.end=i.dataset.end,i.remove()):(d.appendChild(i),d.dataset.end=parseInt(d.dataset.end)+l.length)):i.classList.contains("group")?(d=i,d.insertBefore(n,d.firstChild),d.dataset.start=m):(d=document.createElement("div"),d.className="group",d.dataset.start=m,d.dataset.end=m+c.length-1,addTouchDrag(d),d.draggable=!0,d.addEventListener("dragstart",e=>{mouseSource=d.querySelector(".word"),initAudio(),setTimeout(()=>d.classList.add("dragging-source"),0)}),d.addEventListener("dragend",()=>{d.classList.remove("dragging-source"),mouseSource=null}),e.insertBefore(d,n),d.appendChild(n),d.appendChild(i)),[...e.querySelectorAll(".group")].forEach(e=>{0===e.children.length&&e.remove()}),!0}return!1}</script>
+const _wpOrigin=Object.freeze({owner:"deutschtrautmann",build:"2026-09"});!function(){try{console.log("%cWörterpuzzle © "+_wpOrigin.owner,"color:#888;font-size:10px;padding:2px 0;")}catch(e){}}();var mascotHideTimer=null,mascotMessagePersistent=!1;const TEXTE={beispiel:"Zahlen 1-6\neins, zwei, drei, vier, fünf, sechs,\nZahlen 0-12\nnull, eins, zwei, drei, vier, fünf, sechs, sieben, acht, neun, zehn, elf, zwölf,\nTageszeiten\nMorgen, Vormittag, Mittag, Nachmittag, Abend, Nacht,\nWochentage\nMontag, Dienstag, Mittwoch, Donnerstag, Freitag, Samstag, Sonntag,\nMonate\nJanuar, Februar, März, April, Mai, Juni, Juli, August, September, Oktober, November, Dezember,\nWort\nB,u,c,h,s,t,a,b,i,e,r,e,n, \nSatz \nGuten Tag,, ich, heiße, Martin Malt., Ich, komme, aus, Deutschland.,\nText\nMartin,ist, acht, Jahre, alt, und, geht, in die, Schule., Er, lernt, gern, Deutsch,, aber, er, macht, nicht gern, Hausaufgaben., \nTagesablauf\nHerr Richter, steht, um 7 Uhr, auf., Zum Frühstück, isst, er, ein Brötchen, mit Butter, und, Marmelade., Nach, dem, Frühstück, fährt, er, zur Arbeit., Am Abend, kommt, er, um 18 Uhr, nach Hause, zurück., Sein, Hund Bello, freut sich,, dass, er, wieder, da, ist.,",btnDatei:"Textdatei",btnEingabe:"Texteingabe",btnMusikAn:"Musik an",btnMusikAus:"Musik aus",iconMusikAn:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="4,9 4,15 8,15 13,20 13,4 8,9" fill="currentColor" stroke="none"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/><path d="M19 6a9 9 0 0 1 0 12"/></svg>',iconMusikAus:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="4,9 4,15 8,15 13,20 13,4 8,9" fill="currentColor" stroke="none"/><line x1="16" y1="9" x2="22" y2="15"/><line x1="22" y1="9" x2="16" y2="15"/></svg>',btnThemaWaehlen:"Thema wählen",themaEigeneBtn:"✏️ Eigene Wörter eingeben",modalTitel:"Text oder Sätze eingeben",modalHinweis:"Jede Zeile mit Kommas ergibt ein neues Wörterpuzzle. Eine Zeile ohne Komma davor gilt als Thema. Ein doppeltes Komma ,, zeigt ein echtes Komma in einem Baustein an.",modalPlatzhalter:"Guten Tag,, ich, heiße, Martin Malt., Ich, komme, aus, Deutschland.,",modalThemaLabel:"Thema der Wörter (freiwillig)",modalThemaPlatzhalter:"z. B. Zahlen, Wochentage, Begrüßung",modalUebernehmen:"Text übernehmen",modalSpeichern:"Speichern",modalSchliessen:"Schließen",modalLeerFehler:"Bitte hier die richtige Wortfolge eingeben!",maskottStart:"Hallo! Leider habe ich meine Wörter durcheinander gebracht. Bitte hilf mir das Wörterpuzzle zu lösen.",maskottSpielprinzip:"Ziehe mit dem Finger oder der Maus die Wörter zur passenden Position!",begruessung:["Viel Erfolg!","Willkommen zu einem neuen Wörterpuzzle!","Viel Spaß beim Knobeln!","Auf geht's, ich bin bereit!","Lass sehen, was du kannst!","Auf uns wartet de nächste Runde!","Ein neues Puzzle, viel Spaß dabei!","Ich drücke dir die Daumen!"],richtig:["Wunderbar!","Perfekt!","Ausgezeichnet!","Fantastisch!","Ganz genau!","Sehr schön!","Hervorragend!","Klasse gelöst!","Genau ins Schwarze getroffen!","Bravo!","Da kannst schon richtig gut Deutsch!","Gut, weiter so!"],teilRichtig:["Nicht schlecht bis jetzt!","Wir sind auf einem guten Weg!","Das kommt schon richtig gut!","Weiter so!","Einige Wörter sind bereits gefunden!","Etwas haben wir schon geschafft!","Bald geschafft, bleib dran!","Du hast Talent!"],falsch:["Nur nicht aufgeben!","Das war leider noch nicht richtig, aber das wird schon!","Es ist noch kein Meister vom Himmel gefallen.","Kopf hoch, das klappt beim nächsten Mal!","Versuch es noch einmal, ich glaube an dich!","So ganz passt das noch nicht zusammen, weiter geht's.","Schau dir die Wörter in Ruhe noch einmal an.","Noch nicht ganz richtig, machen wir einen neuen Versuch."],aufgabe:"Bringe die Wörter in die richtige Reihenfolge:",fortschritt:"Text {nr} von {gesamt}",naechsterSatz:"Weiter geht es mit Text Nummer {nr}:",maskottThema:"Bringe die Wörter zum Thema {thema} in die richtige Reihenfolge!",btnPruefen:"Prüfen",endeHinweis:"Alles perfekt gelöst!",endeMaskott:"Du bist jetzt ein Satzbau-Meister!",endeBtnNochmal:"Nochmal spielen"};document.getElementById("fileLabel").textContent=TEXTE.btnDatei,document.getElementById("textInputBtn").textContent=TEXTE.btnEingabe,document.getElementById("musicToggleBtn").innerHTML=TEXTE.iconMusikAn,document.getElementById("musicToggleBtn").setAttribute("aria-label",TEXTE.btnMusikAn),document.getElementById("checkBtn").textContent=TEXTE.btnPruefen,updateMascot(TEXTE.maskottStart,!0),setTimeout(()=>{mascotMessagePersistent&&updateMascot(TEXTE.maskottSpielprinzip,!0)},3e3),document.getElementById("modalTitel").textContent=TEXTE.modalTitel,document.getElementById("modalHinweis").textContent=TEXTE.modalHinweis,document.getElementById("textInputArea").placeholder=TEXTE.modalPlatzhalter,document.getElementById("themaLabel").textContent=TEXTE.modalThemaLabel,document.getElementById("themaInputArea").placeholder=TEXTE.modalThemaPlatzhalter,document.getElementById("applyTextBtn").textContent=TEXTE.modalUebernehmen,document.getElementById("saveTextBtn").textContent=TEXTE.modalSpeichern,document.getElementById("closeTextBtn").textContent=TEXTE.modalSchliessen;let sentences=[],themaList=[],currentThema="",current=0,lastFileData="",errorDamping=0,proceduralSeed=1,currentPattern=[1,1.2,1.5,1.8],playStartTime=null,melodyIndex=0;const MELODY_NOTES=[523.25,587.33,659.25,698.46,783.99,880,987.77,1046.5],MELODY_PATTERN=[0,2,4,2,5,4,2,0,3,2,0,7,5,4,2,4];function getRandomElement(e){return e[Math.floor(Math.random()*e.length)]}function triggerMascotAnimation(e){const t=document.getElementById("mascot-image");t.classList.remove("animate-jump","animate-shake"),t.offsetWidth,"jump"===e?t.classList.add("animate-jump"):"shake"===e&&t.classList.add("animate-shake")}const SLEEP_DELAY=2e4;let sleepTimer=null,isSleeping=!1;function wakeUpMascot(){isSleeping?(isSleeping=!1,document.getElementById("mascot-container").classList.remove("is-sleeping"),resetSleepTimer()):resetSleepTimer()}function putMascotToSleep(){isSleeping||(isSleeping=!0,document.getElementById("mascot-container").classList.add("is-sleeping"))}function resetSleepTimer(){sleepTimer&&clearTimeout(sleepTimer),sleepTimer=setTimeout(putMascotToSleep,2e4)}function handleGlobalInteraction(){wakeUpMascot(),audioCtx&&"suspended"===audioCtx.state&&audioCtx.resume()}function shiftProceduralMusic(){proceduralSeed=Math.random();const e=[[1,1.2,1.33,1.5,1.6,1.8,2],[1,1.25,1.44,1.5,1.75,1.875,2],[1,1.125,1.35,1.5,1.6,1.9,2]];currentPattern=e[Math.floor(proceduralSeed*e.length)]}["mousedown","touchstart","keydown","dragstart"].forEach(e=>{document.addEventListener(e,handleGlobalInteraction,{passive:!0})}),document.addEventListener("visibilitychange",()=>{if(audioCtx)try{document.hidden?"running"===audioCtx.state&&audioCtx.suspend():"suspended"===audioCtx.state&&audioCtx.resume()}catch(e){}}),resetSleepTimer(),document.getElementById("mascot-container").addEventListener("click",()=>{navigator.vibrate&&navigator.vibrate(35),triggerMascotAnimation("jump"),updateMascot("Hallo")});let audioCtx=null,ambientStarted=!1,ambientInterval=null,musicEnabled=!0,beatIndex=0;function initAudio(){try{if(!audioCtx){const e=window.AudioContext||window.webkitAudioContext;if(!e)return;audioCtx=new e}"suspended"===audioCtx.state&&audioCtx.resume(),ambientStarted||(ambientStarted=!0,startAmbientMusic())}catch(e){audioCtx=null}}function tone(e,t="sine",n=0,a=.18,o=.15,s=null,r=2200){if(audioCtx&&"suspended"!==audioCtx.state)try{const i=audioCtx.createOscillator(),l=audioCtx.createGain(),c=audioCtx.createBiquadFilter();c.type="lowpass",c.frequency.value=r,i.type=t;const d=audioCtx.currentTime+n;i.frequency.setValueAtTime(e,d),s&&i.frequency.exponentialRampToValueAtTime(s,d+a),l.gain.setValueAtTime(.001,d),l.gain.linearRampToValueAtTime(o,d+.02),l.gain.exponentialRampToValueAtTime(.001,d+a),i.connect(c),c.connect(l),l.connect(audioCtx.destination),i.start(d),i.stop(d+a)}catch(e){}}function getPuzzleProgress(){const e=document.querySelector(".pool");if(!e)return 0;const t=e.querySelectorAll(".word").length;return t<=1?1:e.querySelectorAll(".group .word").length/t}function startAmbientMusic(){musicEnabled&&(playStartTime||(playStartTime=Date.now()),function e(){if(!musicEnabled)return void(ambientInterval=null);const t=getPuzzleProgress(),n=(Date.now()-playStartTime)/1e3;if(errorDamping>0&&(errorDamping-=.1),beatIndex%4==0){const e=.28-.15*errorDamping;tone(110*(1+.02*proceduralSeed),"sine",0,1.4,Math.max(.05,e),110.22,800),tone(165,"sine",.2,1.2,Math.max(.02,.4*e),165.22,900)}if(t>.1){const e=(beatIndex+Math.floor(10*proceduralSeed))%currentPattern.length,n=220*currentPattern[e];tone(n,proceduralSeed>.5?"triangle":"sine",0,.22,(.09+.09*t)*(1-.5*errorDamping),1.005*n,2e3),t>.4&&beatIndex%2==0&&tone(1.33*n,"sine",.06,.12,.04,null,2500)}if(t>.6){const e=.05+.04*t;beatIndex%2==0?tone(1200+400*proceduralSeed,"triangle",0,.04,e,400,3500):tone(180,"sine",0,.08,1.4*e,70,600)}if(n>120){const e=Math.min(1,(n-120)/30);if(beatIndex%3==0){const t=MELODY_NOTES[MELODY_PATTERN[melodyIndex%MELODY_PATTERN.length]];melodyIndex++;const n=.07*e*(1-.4*errorDamping);tone(t,"sine",0,.35,n,1.002*t,3e3),beatIndex%6==0&&tone(1.5*t,"sine",.1,.25,.4*n,1.502*t,2500)}}if(n>300){const e=Math.min(1,(n-300)/60);if(beatIndex%8==0){const t=80+40*Math.random();tone(t,"sine",0,1.8,.04*e,t*(.95+.1*Math.random()),400),tone(1.2*t,"sine",.3,1.4,.02*e,1.1*t,350)}if(beatIndex%13==0&&Math.random()>.4){const t=1800+800*Math.random();tone(t,"sine",0,.06,.06*e,1.3*t,4e3),tone(1.3*t,"sine",.07,.05,.05*e,.9*t,4e3),tone(.9*t,"sine",.13,.06,.04*e,1.1*t,4e3)}}if(n>600){const e=Math.min(1,(n-600)/60);beatIndex%4==0&&[220,275,330].forEach((t,n)=>{tone(t,"sawtooth",.05*n,1.6,.04*e,1.001*t,500)}),beatIndex%8==0&&tone(60,"sine",0,.12,.1*e,30,300),beatIndex%8==4&&tone(200,"triangle",0,.05,.06*e,150,800)}beatIndex++,ambientInterval=setTimeout(e,460)}())}function playPop(){shiftProceduralMusic();const e=540+120*Math.random();tone(e,"sine",0,.08,.22,e+100,2500),tone(2*e,"triangle",.02,.04,.09,2*e,3e3)}function playClick(){shiftProceduralMusic(),tone(280+60*Math.random(),"triangle",0,.05,.25,340,1500)}function playPartial(){shiftProceduralMusic(),[440,554,659].map(e=>e*(1+.02*Math.random())).forEach((e,t)=>{tone(e,"triangle",.08*t,.2,.18,1.02*e,2200)})}function playWrong(){shiftProceduralMusic(),errorDamping=1,tone(190,"sawtooth",0,.35,.35,80,800),tone(130,"triangle",.08,.3,.25,50,600)}function playStarSound(){[523.25,659.25,783.99,1046.5,1318.51,1567.98].forEach((e,t)=>{tone(e,"sine",.05*t,.2,.16,1.01*e,3500)})}const musicToggleBtn=document.getElementById("musicToggleBtn");function processData(e,t){const{rounds:n,themes:a}=parseRounds(e,t);return 0===n.length?(alert(TEXTE.modalLeerFehler),!1):(sentences=n,themaList=a,current=0,currentThema=themaList[0]||"",playStartTime=Date.now(),melodyIndex=0,setMascotMood(!1),triggerMascotAnimation("jump"),updateMascot(currentThema?TEXTE.maskottThema.replace("{thema}",currentThema):getRandomElement(TEXTE.begruessung),!0),showSentence(),!0)}musicToggleBtn.addEventListener("click",()=>{musicEnabled=!musicEnabled,musicEnabled?(musicToggleBtn.innerHTML=TEXTE.iconMusikAn,musicToggleBtn.setAttribute("aria-label",TEXTE.btnMusikAn),ambientStarted&&!ambientInterval&&startAmbientMusic()):(musicToggleBtn.innerHTML=TEXTE.iconMusikAus,musicToggleBtn.setAttribute("aria-label",TEXTE.btnMusikAus),ambientInterval&&(clearTimeout(ambientInterval),ambientInterval=null)),playClick()}),document.getElementById("fileInput").addEventListener("change",function(e){const t=e.target.files[0];if(!t)return;const n=new FileReader;n.onload=e=>{const n=e.target.result,a=new Uint8Array(n),o=239===a[0]&&187===a[1]&&191===a[2];let s="UTF-8";o||function(e){let t=o?3:0;for(;t<e.length;){const n=e[t];let a=0;if(n<=127)t++;else{if(n>=194&&n<=223)a=1;else if(n>=224&&n<=239)a=2;else{if(!(n>=240&&n<=244))return!1;a=3}for(let n=1;n<=a;n++)if(t+n>=e.length||128!=(192&e[t+n]))return!1;t+=a+1}}return!0}(a)||(s="windows-1252");const r=new FileReader;r.onload=e=>{let t=e.target.result;65279===t.charCodeAt(0)&&(t=t.slice(1)),lastFileData=t,processData(lastFileData)},r.readAsText(t,s)},n.readAsArrayBuffer(t)});const textInputBtn=document.getElementById("textInputBtn"),textModal=document.getElementById("textModal"),textInputArea=document.getElementById("textInputArea"),themaInputArea=document.getElementById("themaInputArea"),applyTextBtn=document.getElementById("applyTextBtn"),saveTextBtn=document.getElementById("saveTextBtn"),closeTextBtn=document.getElementById("closeTextBtn");function downloadTextFile(e,t){const n=new Blob([t],{type:"text/plain;charset=utf-8"}),a=URL.createObjectURL(n),o=document.createElement("a");o.href=a,o.download=e,document.body.appendChild(o),o.click(),document.body.removeChild(o),setTimeout(()=>URL.revokeObjectURL(a),1e3)}textInputBtn.addEventListener("click",()=>{textModal.style.display="flex",textInputArea.focus()}),closeTextBtn.addEventListener("click",()=>{textModal.style.display="none"}),textModal.addEventListener("click",e=>{e.target===textModal&&(textModal.style.display="none")}),applyTextBtn.addEventListener("click",()=>{const e=textInputArea.value.trim();if(!e)return void alert(TEXTE.modalLeerFehler);const t=themaInputArea.value.trim();lastFileData=t?t+"\n"+e:e,processData(e,t)&&(textModal.style.display="none",playClick())}),saveTextBtn.addEventListener("click",()=>{const e=textInputArea.value.trim();if(!e)return void alert(TEXTE.modalLeerFehler);const t=themaInputArea.value.trim();downloadTextFile("saetze.txt",t?t+"\n"+e:e),playClick()});const themaSelect=document.getElementById("themaSelect");let themaSelectRounds=[];function buildThemaSelect(){const{rounds:e,themes:t}=parseRounds(TEXTE.beispiel,"");themaSelect.innerHTML="",themaSelectRounds=[];const n=document.createElement("option");n.textContent=TEXTE.btnThemaWaehlen,n.selected=!0,n.disabled=!0,themaSelect.appendChild(n),themaSelectRounds.push(null),e.forEach((e,n)=>{const a=t[n];if(!a)return;const o=document.createElement("option");o.textContent=a,themaSelect.appendChild(o),themaSelectRounds.push(e)});const a=document.createElement("option");a.textContent=TEXTE.themaEigeneBtn,themaSelect.appendChild(a),themaSelectRounds.push("__eigene__")}function parseRounds(e,t){const n=e.split(/\r?\n/).map(e=>e.trim()).filter(e=>e.length>0),a=[],o=[];let s=(t||"").trim();return n.forEach(e=>{/,/.test(e)?(a.push(e),o.push(s),s=""):s=e}),{rounds:a,themes:o}}function splitSentenceWords(e){return e.split(",,").join("\0,").split(",").map(e=>e.split("\0").join(",").trim()).filter(Boolean)}function shuffle(e){return e.sort(()=>Math.random()-.5)}function updateMascot(e,t=!1){const n=document.getElementById("mascot-text"),a=document.getElementById("mascot-speech-bubble");clearTimeout(mascotHideTimer),n.textContent=e,a.style.display=e?"":"none",mascotMessagePersistent=!(!e||!t),e&&!t&&(mascotHideTimer=setTimeout(()=>{n.textContent="",a.style.display="none"},3e3))}function releasePersistentMascotMessage(){mascotMessagePersistent&&(mascotMessagePersistent=!1,clearTimeout(mascotHideTimer),mascotHideTimer=setTimeout(()=>{document.getElementById("mascot-text").textContent="",document.getElementById("mascot-speech-bubble").style.display="none"},3e3))}function setMascotMood(e){const t=document.getElementById("mascot-image");e?t.classList.add("is-sad"):t.classList.remove("is-sad")}function showSentence(){const e=document.getElementById("game"),t=document.getElementById("checkBtn");if(current>=sentences.length){setMascotMood(!1),triggerMascotAnimation("jump"),updateMascot(TEXTE.endeMaskott),t.style.display="none",document.getElementById("mascot-container").classList.remove("has-heart");const n=document.createElement("button");return n.className="restart-btn",n.innerHTML=TEXTE.endeBtnNochmal,n.onclick=()=>{current=0,processData(lastFileData)},void e.appendChild(n)}e.innerHTML="",document.getElementById("mascot-container").classList.remove("has-heart"),t.style.display="block";const n=sentences[current],a=shuffle(splitSentenceWords(n));currentThema=themaList[current]||"",current>0&&(setMascotMood(!1),updateMascot(currentThema?TEXTE.maskottThema.replace("{thema}",currentThema):TEXTE.naechsterSatz.replace("{nr}",current+1)));const o=createZone("pool");o.dataset.correct=n,a.forEach(e=>o.appendChild(createWord(e))),e.appendChild(o)}function createWord(e){const t=document.createElement("div");return t.className="word",t.textContent=e,addDragEvents(t),t}function createZone(e){const t=document.createElement("div");return t.className="container "+e,t.addEventListener("dragover",e=>{if(e.preventDefault(),t.classList.add("drag-over"),!mouseSource)return;const n=getMovable(mouseSource),a=getDragAfterElement(t,e.clientX,e.clientY);flipInsert(t,n,a)}),t.addEventListener("dragleave",()=>t.classList.remove("drag-over")),t.addEventListener("drop",e=>{e.preventDefault(),t.classList.remove("drag-over"),playPop(),mouseSource=null}),t}themaSelect.addEventListener("change",()=>{const e=themaSelectRounds[themaSelect.selectedIndex];if("__eigene__"===e)return themaSelect.selectedIndex=0,textModal.style.display="flex",void textInputArea.focus();e&&(playClick(),processData(e,themaSelect.options[themaSelect.selectedIndex].textContent))}),window.onload=()=>{const{rounds:e,themes:t}=parseRounds(TEXTE.beispiel,"");sentences=e,themaList=t,current=0,lastFileData=TEXTE.beispiel,buildThemaSelect(),showSentence()};let mouseSource=null;function addDragEvents(e){e.draggable=!0,e.addEventListener("dragstart",t=>{mouseSource=e,initAudio(),releasePersistentMascotMessage(),setTimeout(()=>getMovable(e).classList.add("dragging-source"),0)}),e.addEventListener("dragend",()=>{mouseSource&&getMovable(mouseSource).classList.remove("dragging-source"),mouseSource=null}),addTouchDrag(e)}function addTouchDrag(e){let t=null,n=null,a=0,o=0;e.addEventListener("touchstart",s=>{initAudio(),releasePersistentMascotMessage(),n=e;const r=getMovable(e),i=s.touches[0],l=r.getBoundingClientRect();a=i.clientX-l.left,o=i.clientY-l.top,t=r.cloneNode(!0),t.classList.add("touch-ghost"),t.style.width=l.width+"px",t.style.height=l.height+"px",t.style.left=i.clientX-a+"px",t.style.top=i.clientY-o+"px",t.style.pointerEvents="none",document.body.appendChild(t),r.classList.add("dragging-source")},{passive:!0}),e.addEventListener("touchmove",e=>{if(!n||!t)return;e.preventDefault();const s=e.touches[0];t.style.left=s.clientX-a+"px",t.style.top=s.clientY-o+"px",t.style.visibility="hidden";const r=document.elementFromPoint(s.clientX,s.clientY);t.style.visibility="visible";const i=r&&r.closest(".container");i&&(document.querySelectorAll(".container").forEach(e=>e.classList.remove("drag-over")),i.classList.add("drag-over"),flipInsert(i,getMovable(n),getDragAfterElement(i,s.clientX,s.clientY)))},{passive:!1});const s=()=>{t&&(t.remove(),t=null),n&&(getMovable(n).classList.remove("dragging-source"),n=null),document.querySelectorAll(".container").forEach(e=>e.classList.remove("drag-over")),playPop()};e.addEventListener("touchend",s),e.addEventListener("touchcancel",s)}function getMovable(e){const t=e.parentElement;return t&&t.classList.contains("group")?t:e}function flipInsert(e,t,n){const a=[...e.querySelectorAll(".word:not(.group .word), .group")].filter(e=>e!==t),o=new Map;a.forEach(e=>{const t=e.getBoundingClientRect();o.set(e,{x:t.left,y:t.top})}),null==n?e.appendChild(t):e.insertBefore(t,n),a.forEach(e=>{const t=o.get(e);if(!t)return;const n=e.getBoundingClientRect(),a=t.x-n.left,s=t.y-n.top;Math.abs(a)<1&&Math.abs(s)<1||(e.style.transition="none",e.style.transform=`translate(${a}px, ${s}px)`,requestAnimationFrame(()=>{requestAnimationFrame(()=>{e.style.transition="",e.style.transform=""})}))})}function getDragAfterElement(e,t,n){const a=[...e.querySelectorAll(".word:not(.group .word), .group:not(.dragging-source)")];if(0===a.length)return null;const o=[];a.forEach(e=>{const t=e.getBoundingClientRect(),n=t.top+t.height/2;let a=o.find(e=>Math.abs(e.mid-n)<.6*t.height);a||(a={mid:n,els:[]},o.push(a)),a.els.push(e)}),o.sort((e,t)=>e.mid-t.mid);let s=o[0],r=1/0;o.forEach(e=>{const t=Math.abs(e.mid-n);t<r&&(r=t,s=e)});const i=s.els.slice().sort((e,t)=>e.getBoundingClientRect().left-t.getBoundingClientRect().left);for(const e of i){const n=e.getBoundingClientRect();if(t<n.left+n.width/2)return e}const l=o.indexOf(s);return l<o.length-1?o[l+1].els.slice().sort((e,t)=>e.getBoundingClientRect().left-t.getBoundingClientRect().left)[0]:null}function normalize(e){return e.replace(/[.,!?;:]/g,"").replace(/\s+/g," ").trim()}function checkSentence(){releasePersistentMascotMessage();const e=document.querySelector(".pool");if(!e)return;const t=[...e.querySelectorAll(".word")].map(e=>e.textContent),n=e.dataset.correct,a=splitSentenceWords(n);if(t.length===a.length&&t.every((e,t)=>normalize(e)===normalize(a[t])))setMascotMood(!1),triggerMascotAnimation("jump"),updateMascot(getRandomElement(TEXTE.richtig)),document.getElementById("mascot-container").classList.add("has-heart"),playStarSound(),setTimeout(()=>{current++,showSentence()},2400);else{let t=!1;for(;updateGroupsOnce(e,n);)t=!0;t?(setMascotMood(!1),triggerMascotAnimation("jump"),updateMascot(getRandomElement(TEXTE.teilRichtig)),playPartial()):(setMascotMood(!0),triggerMascotAnimation("shake"),updateMascot(getRandomElement(TEXTE.falsch)),playWrong())}}function getElementWords(e){return e.classList.contains("word")?[e.textContent]:[...e.querySelectorAll(".word")].map(e=>e.textContent)}function updateGroupsOnce(e,t){const n=splitSentenceWords(t),a=[...e.querySelectorAll(".word:not(.group .word), .group")];function o(e,t=[]){for(let a=0;a<=n.length-e.length;a++){let o=!0;for(let t=0;t<e.length;t++)if(normalize(e[t])!==normalize(n[a+t])){o=!1;break}if(!o)continue;let s=!1;for(const n of t)if(!(a+e.length-1<n.start||a>n.end)){s=!0;break}if(!s)return a}return-1}const s=[];a.forEach(e=>{if(e.classList.contains("group")){const t=parseInt(e.dataset.start),n=parseInt(e.dataset.end);isNaN(t)||isNaN(n)||s.push({start:t,end:n})}});for(let t=0;t<a.length-1;t++){const n=a[t],r=a[t+1],i=getElementWords(n),l=getElementWords(r),c=[...i,...l];let d,u=!1,m=-1;if(n.classList.contains("group")&&r.classList.contains("group"))parseInt(n.dataset.end)+1===parseInt(r.dataset.start)&&(u=!0,m=parseInt(n.dataset.start));else if(n.classList.contains("group")){const e=parseInt(n.dataset.end);o(l,s.filter(e=>!(e.start===parseInt(n.dataset.start)&&e.end===parseInt(n.dataset.end))))===e+1&&(u=!0,m=parseInt(n.dataset.start))}else if(r.classList.contains("group")){const e=parseInt(r.dataset.start),t=o(i,s.filter(t=>!(t.start===parseInt(e)&&t.end===parseInt(r.dataset.end))));t+i.length===e&&(u=!0,m=t)}else m=o(c,s),-1!==m&&(u=!0);if(u)return n.classList.contains("group")?(d=n,r.classList.contains("group")?([...r.querySelectorAll(".word")].forEach(e=>d.appendChild(e)),d.dataset.end=r.dataset.end,r.remove()):(d.appendChild(r),d.dataset.end=parseInt(d.dataset.end)+l.length)):r.classList.contains("group")?(d=r,d.insertBefore(n,d.firstChild),d.dataset.start=m):(d=document.createElement("div"),d.className="group",d.dataset.start=m,d.dataset.end=m+c.length-1,addTouchDrag(d),d.draggable=!0,d.addEventListener("dragstart",e=>{mouseSource=d.querySelector(".word"),initAudio(),setTimeout(()=>d.classList.add("dragging-source"),0)}),d.addEventListener("dragend",()=>{d.classList.remove("dragging-source"),mouseSource=null}),e.insertBefore(d,n),d.appendChild(n),d.appendChild(r)),[...e.querySelectorAll(".group")].forEach(e=>{0===e.children.length&&e.remove()}),!0}return!1}</script>
 </body>
 </html>
